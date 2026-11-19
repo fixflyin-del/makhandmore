@@ -1,10 +1,69 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider } from 'firebase/auth';
 import { doc, getDocFromServer, getFirestore } from 'firebase/firestore';
-import firebaseConfig from '../../firebase-applet-config.json';
+interface FirebaseAppletConfig {
+  apiKey?: string;
+  authDomain?: string;
+  projectId?: string;
+  storageBucket?: string;
+  messagingSenderId?: string;
+  appId?: string;
+  measurementId?: string;
+  firestoreDatabaseId?: string;
+}
 
-const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app, firebaseConfig.firestoreDatabaseId);
+// Optional local config load: bundled automatically when firebase-applet-config.json
+// exists (e.g., AI Studio / local dev), and resolves to {} without failing builds on Vercel.
+const localConfigModules = import.meta.glob<FirebaseAppletConfig>(
+  '../../firebase-applet-config.json',
+  { eager: true, import: 'default' }
+);
+const localConfig: FirebaseAppletConfig = Object.values(localConfigModules)[0] || {};
+
+const envConfig: FirebaseAppletConfig = {
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
+  firestoreDatabaseId: import.meta.env.VITE_FIREBASE_DATABASE_ID,
+};
+
+const firebaseConfig: FirebaseAppletConfig = {
+  apiKey: envConfig.apiKey || localConfig.apiKey || '',
+  authDomain: envConfig.authDomain || localConfig.authDomain || '',
+  projectId: envConfig.projectId || localConfig.projectId || '',
+  storageBucket: envConfig.storageBucket || localConfig.storageBucket || '',
+  messagingSenderId: envConfig.messagingSenderId || localConfig.messagingSenderId || '',
+  appId: envConfig.appId || localConfig.appId || '',
+  measurementId: envConfig.measurementId || localConfig.measurementId || '',
+  firestoreDatabaseId:
+    envConfig.firestoreDatabaseId || localConfig.firestoreDatabaseId || '(default)',
+};
+
+export const isFirebaseConfigured = Boolean(
+  firebaseConfig.apiKey &&
+    firebaseConfig.projectId &&
+    !firebaseConfig.apiKey.startsWith('MY_')
+);
+
+const app = initializeApp(
+  isFirebaseConfigured
+    ? firebaseConfig
+    : {
+        apiKey: 'demo-unconfigured-key',
+        authDomain: 'demo-unconfigured.firebaseapp.com',
+        projectId: 'demo-unconfigured',
+        appId: '1:000000000000:web:0000000000000000000000',
+      }
+);
+
+export const db =
+  firebaseConfig.firestoreDatabaseId && firebaseConfig.firestoreDatabaseId !== '(default)'
+    ? getFirestore(app, firebaseConfig.firestoreDatabaseId)
+    : getFirestore(app);
 export const auth = getAuth(app);
 export const googleProvider = new GoogleAuthProvider();
 
@@ -67,6 +126,7 @@ export function handleFirestoreError(
 }
 
 async function testConnection() {
+  if (!isFirebaseConfigured) return;
   try {
     await getDocFromServer(doc(db, 'test', 'connection'));
   } catch (error) {
