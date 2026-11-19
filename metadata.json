@@ -1,0 +1,6 @@
+{
+  "name": "MAKH AND MORE — Premium Mithila Makhana",
+  "description": "Shop 100% natural, farm-fresh Mithila Makhana, roasted flavoured fox nuts, and dry fruits from MAKH AND MORE by ASR Enterprises, Darbhanga, Bihar.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

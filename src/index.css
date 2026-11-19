@@ -1,0 +1,173 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Bricolage Grotesque", "Plus Jakarta Sans", system-ui, sans-serif;
+  --font-serif: "Bricolage Grotesque", "Plus Jakarta Sans", system-ui, sans-serif;
+  --font-sans: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+
+  /* MAKH AND MORE — Vibrant Modern App Palette */
+  --color-forest: #0D3B2A;
+  --color-forest-dark: #07261B;
+  --color-forest-light: #175C41;
+  --color-leaf: #23884D;
+  --color-lime: #B7E843;
+  --color-lime-soft: #EBF9C8;
+  --color-mustard: #F4B926;
+  --color-gold: #F4B926;
+  --color-gold-light: #FFD45A;
+  --color-gold-dark: #C88B0B;
+  --color-gold-soft: #FFF1C2;
+  --color-cream: #FFF9EE;
+  --color-cream-dark: #F4E9D4;
+  --color-cream-deep: #F4E9D4;
+  --color-mint: #E2F6E7;
+  --color-peach: #FFE7D4;
+  --color-orange: #FF7F3E;
+  --color-coral: #F25C54;
+  --color-coral-soft: #FFE4E1;
+  --color-accent: #E8543E;
+  --color-spice: #E8543E;
+  --color-ink: #12241C;
+  --color-ink-muted: #4E6358;
+}
+
+@layer base {
+  html {
+    font-family: var(--font-sans);
+    scroll-behavior: smooth;
+    background-color: #FFF9EE;
+    color: #12241C;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  h1, h2, h3, .font-display, .font-serif {
+    font-family: var(--font-display);
+    text-wrap: balance;
+    letter-spacing: -0.02em;
+  }
+
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* Signature Dotted Pattern Backgrounds */
+.bg-dots-forest {
+  background-image: radial-gradient(rgba(13, 59, 42, 0.13) 1.5px, transparent 1.5px);
+  background-size: 18px 18px;
+}
+
+.bg-dots-light {
+  background-image: radial-gradient(rgba(255, 249, 238, 0.2) 1.5px, transparent 1.5px);
+  background-size: 20px 20px;
+}
+
+.bg-dots-mustard {
+  background-image: radial-gradient(rgba(200, 139, 11, 0.22) 1.75px, transparent 1.75px);
+  background-size: 16px 16px;
+}
+
+.bg-dots-lime {
+  background-image: radial-gradient(rgba(35, 136, 77, 0.18) 1.75px, transparent 1.75px);
+  background-size: 18px 18px;
+}
+
+.bg-dots-coral {
+  background-image: radial-gradient(rgba(242, 92, 84, 0.18) 1.5px, transparent 1.5px);
+  background-size: 18px 18px;
+}
+
+/* Scrollbar utilities for swipeable mobile carousels */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* GPU-Composited Animations */
+@keyframes marqueeScroll {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes floatGentle {
+  0%, 100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -10px, 0);
+  }
+}
+
+@keyframes floatReverse {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(0, 8px, 0) rotate(4deg);
+  }
+}
+
+@keyframes spinSlow {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes driftDots {
+  0%, 100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(6px, -6px, 0);
+  }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marqueeScroll 28s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+.animate-float {
+  animation: floatGentle 4.8s ease-in-out infinite;
+}
+
+.animate-float-reverse {
+  animation: floatReverse 5.6s ease-in-out infinite;
+}
+
+.animate-spin-slow {
+  animation: spinSlow 24s linear infinite;
+}
+
+.animate-drift-dots {
+  animation: driftDots 6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee,
+  .animate-float,
+  .animate-float-reverse,
+  .animate-spin-slow,
+  .animate-drift-dots {
+    animation: none;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+}

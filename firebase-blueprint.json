@@ -1,0 +1,322 @@
+{
+  "entities": {
+    "Product": {
+      "title": "Product",
+      "description": "A MAKH AND MORE catalog item stored in Firestore.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "name": { "type": "string", "minLength": 2, "maxLength": 160 },
+        "slug": { "type": "string", "minLength": 2, "maxLength": 160, "pattern": "^[a-z0-9\\-]+$" },
+        "category": { "type": "string", "maxLength": 80 },
+        "flavour": { "type": "string", "maxLength": 80 },
+        "shortDescription": { "type": "string", "maxLength": 400 },
+        "description": { "type": "string", "maxLength": 5000 },
+        "price": { "type": "number" },
+        "salePrice": { "type": "number" },
+        "weight": { "type": "string", "maxLength": 40 },
+        "sku": { "type": "string", "maxLength": 64 },
+        "stock": { "type": "number" },
+        "primaryImage": { "type": "string", "maxLength": 600 },
+        "cloudinaryPublicId": { "type": "string", "maxLength": 256 },
+        "gallery": { "type": "array" },
+        "highlights": { "type": "array" },
+        "ingredients": { "type": "string", "maxLength": 1000 },
+        "nutrition": { "type": "object" },
+        "shelfLife": { "type": "string", "maxLength": 120 },
+        "storage": { "type": "string", "maxLength": 300 },
+        "faq": { "type": "array" },
+        "seoTitle": { "type": "string", "maxLength": 120 },
+        "seoDescription": { "type": "string", "maxLength": 300 },
+        "published": { "type": "boolean" },
+        "featured": { "type": "boolean" },
+        "rating": { "type": "number" },
+        "reviewCount": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "slug", "category", "price", "salePrice", "weight", "sku", "stock", "primaryImage", "published", "createdAt", "updatedAt"]
+    },
+    "Category": {
+      "title": "Category",
+      "description": "Product category metadata for storefront navigation and filtering.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "minLength": 2, "maxLength": 80 },
+        "slug": { "type": "string", "minLength": 2, "maxLength": 80, "pattern": "^[a-z0-9\\-]+$" },
+        "description": { "type": "string", "maxLength": 400 },
+        "image": { "type": "string", "maxLength": 600 },
+        "order": { "type": "number" },
+        "active": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "slug", "active", "order", "createdAt", "updatedAt"]
+    },
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Private customer profile containing PII; restricted strictly to the owner or admin.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "maxLength": 128 },
+        "displayName": { "type": "string", "maxLength": 120 },
+        "email": { "type": "string", "maxLength": 180 },
+        "phone": { "type": "string", "maxLength": 24 },
+        "whatsappNumber": { "type": "string", "maxLength": 24 },
+        "addresses": { "type": "array" },
+        "recentlyViewed": { "type": "array" },
+        "wishlistIds": { "type": "array" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "displayName", "createdAt", "updatedAt"]
+    },
+    "Order": {
+      "title": "Order",
+      "description": "Customer purchase order containing shipping and payment details; PII restricted to owner or admin.",
+      "type": "object",
+      "properties": {
+        "orderNumber": { "type": "string", "maxLength": 40, "pattern": "^[A-Z0-9\\-]+$" },
+        "userId": { "type": "string", "maxLength": 128 },
+        "customerName": { "type": "string", "minLength": 2, "maxLength": 120 },
+        "customerPhone": { "type": "string", "minLength": 10, "maxLength": 20 },
+        "customerEmail": { "type": "string", "maxLength": 180 },
+        "whatsappVerified": { "type": "boolean" },
+        "shippingAddress": { "type": "object" },
+        "items": { "type": "array" },
+        "subtotal": { "type": "number" },
+        "discount": { "type": "number" },
+        "couponCode": { "type": "string", "maxLength": 40 },
+        "shippingFee": { "type": "number" },
+        "total": { "type": "number" },
+        "paymentMethod": { "type": "string", "enum": ["cod", "razorpay", "upi"] },
+        "paymentStatus": { "type": "string", "enum": ["pending", "paid", "failed", "refunded"] },
+        "razorpayOrderId": { "type": "string", "maxLength": 120 },
+        "razorpayPaymentId": { "type": "string", "maxLength": 120 },
+        "orderStatus": { "type": "string", "enum": ["pending", "confirmed", "packed", "shipped", "delivered", "cancelled"] },
+        "trackingNumber": { "type": "string", "maxLength": 120 },
+        "courierName": { "type": "string", "maxLength": 120 },
+        "notes": { "type": "string", "maxLength": 500 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["orderNumber", "userId", "customerName", "customerPhone", "shippingAddress", "items", "subtotal", "discount", "shippingFee", "total", "paymentMethod", "paymentStatus", "orderStatus", "createdAt", "updatedAt"]
+    },
+    "OrderTracking": {
+      "title": "OrderTracking",
+      "description": "Public non-PII shipment tracking summary indexed by orderNumber.",
+      "type": "object",
+      "properties": {
+        "orderNumber": { "type": "string", "maxLength": 40 },
+        "phoneLast4": { "type": "string", "maxLength": 4 },
+        "orderStatus": { "type": "string", "enum": ["pending", "confirmed", "packed", "shipped", "delivered", "cancelled"] },
+        "paymentStatus": { "type": "string", "enum": ["pending", "paid", "failed", "refunded"] },
+        "courierName": { "type": "string", "maxLength": 120 },
+        "trackingNumber": { "type": "string", "maxLength": 120 },
+        "itemCount": { "type": "number" },
+        "total": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["orderNumber", "phoneLast4", "orderStatus", "paymentStatus", "itemCount", "total", "createdAt", "updatedAt"]
+    },
+    "Coupon": {
+      "title": "Coupon",
+      "description": "Promotional discount coupon managed by administrators.",
+      "type": "object",
+      "properties": {
+        "code": { "type": "string", "minLength": 2, "maxLength": 40, "pattern": "^[A-Z0-9_\\-]+$" },
+        "type": { "type": "string", "enum": ["percent", "fixed"] },
+        "value": { "type": "number" },
+        "minOrderAmount": { "type": "number" },
+        "maxDiscount": { "type": "number" },
+        "active": { "type": "boolean" },
+        "description": { "type": "string", "maxLength": 200 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["code", "type", "value", "minOrderAmount", "active", "createdAt", "updatedAt"]
+    },
+    "Review": {
+      "title": "Review",
+      "description": "Customer product review moderated by administrators.",
+      "type": "object",
+      "properties": {
+        "productId": { "type": "string", "maxLength": 128 },
+        "productName": { "type": "string", "maxLength": 160 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "authorName": { "type": "string", "minLength": 2, "maxLength": 80 },
+        "rating": { "type": "number" },
+        "title": { "type": "string", "maxLength": 120 },
+        "comment": { "type": "string", "minLength": 5, "maxLength": 1200 },
+        "verifiedPurchase": { "type": "boolean" },
+        "approved": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["productId", "userId", "authorName", "rating", "comment", "approved", "createdAt", "updatedAt"]
+    },
+    "BlogArticle": {
+      "title": "BlogArticle",
+      "description": "Educational article about Mithila makhana, recipes, and nutrition.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "minLength": 5, "maxLength": 180 },
+        "slug": { "type": "string", "minLength": 3, "maxLength": 160, "pattern": "^[a-z0-9\\-]+$" },
+        "excerpt": { "type": "string", "maxLength": 400 },
+        "content": { "type": "string", "maxLength": 20000 },
+        "category": { "type": "string", "maxLength": 80 },
+        "featuredImage": { "type": "string", "maxLength": 600 },
+        "author": { "type": "string", "maxLength": 80 },
+        "readTime": { "type": "string", "maxLength": 30 },
+        "tags": { "type": "array" },
+        "relatedProductSlugs": { "type": "array" },
+        "seoTitle": { "type": "string", "maxLength": 120 },
+        "seoDescription": { "type": "string", "maxLength": 300 },
+        "published": { "type": "boolean" },
+        "publishedAt": { "type": "string", "maxLength": 40 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "slug", "excerpt", "content", "category", "author", "published", "createdAt", "updatedAt"]
+    },
+    "HeroBanner": {
+      "title": "HeroBanner",
+      "description": "Editable homepage hero slide managed in the admin dashboard.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "maxLength": 120 },
+        "subtitle": { "type": "string", "maxLength": 320 },
+        "eyebrow": { "type": "string", "maxLength": 80 },
+        "ctaText": { "type": "string", "maxLength": 40 },
+        "ctaLink": { "type": "string", "maxLength": 200 },
+        "secondaryCtaText": { "type": "string", "maxLength": 40 },
+        "secondaryCtaLink": { "type": "string", "maxLength": 200 },
+        "image": { "type": "string", "maxLength": 600 },
+        "order": { "type": "number" },
+        "active": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "subtitle", "ctaText", "ctaLink", "image", "order", "active", "createdAt", "updatedAt"]
+    },
+    "StoreSettings": {
+      "title": "StoreSettings",
+      "description": "Publicly readable storefront configuration, policies, shipping thresholds, and social links (zero secrets).",
+      "type": "object",
+      "properties": {
+        "brandName": { "type": "string", "maxLength": 80 },
+        "tagline": { "type": "string", "maxLength": 160 },
+        "announcementMessages": { "type": "array" },
+        "freeShippingThreshold": { "type": "number" },
+        "standardShippingFee": { "type": "number" },
+        "bulkDiscountThreshold": { "type": "number" },
+        "bulkDiscountPercent": { "type": "number" },
+        "codEnabled": { "type": "boolean" },
+        "razorpayEnabled": { "type": "boolean" },
+        "whatsappNumber": { "type": "string", "maxLength": 24 },
+        "supportEmail": { "type": "string", "maxLength": 120 },
+        "supportPhone": { "type": "string", "maxLength": 30 },
+        "address": { "type": "string", "maxLength": 300 },
+        "supportHours": { "type": "string", "maxLength": 240 },
+        "socialInstagram": { "type": "string", "maxLength": 240 },
+        "socialFacebook": { "type": "string", "maxLength": 240 },
+        "socialTwitter": { "type": "string", "maxLength": 240 },
+        "seoTitle": { "type": "string", "maxLength": 120 },
+        "seoDescription": { "type": "string", "maxLength": 300 },
+        "policies": { "type": "object" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["brandName", "freeShippingThreshold", "standardShippingFee", "codEnabled", "updatedAt"]
+    },
+    "ContactEnquiry": {
+      "title": "ContactEnquiry",
+      "description": "Customer contact enquiry submitted via the Contact Us page; readable only by admins.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "minLength": 2, "maxLength": 120 },
+        "email": { "type": "string", "minLength": 5, "maxLength": 180 },
+        "phone": { "type": "string", "maxLength": 24 },
+        "subject": { "type": "string", "maxLength": 160 },
+        "message": { "type": "string", "minLength": 5, "maxLength": 2500 },
+        "status": { "type": "string", "enum": ["new", "replied", "closed"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "email", "subject", "message", "status", "createdAt"]
+    },
+    "NewsletterSubscriber": {
+      "title": "NewsletterSubscriber",
+      "description": "Email newsletter subscriber; readable only by admins.",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string", "minLength": 5, "maxLength": 180 },
+        "subscribedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["email", "subscribedAt"]
+    },
+    "AdminRecord": {
+      "title": "AdminRecord",
+      "description": "Trusted administrator lookup document; strictly managed by existing admins.",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string", "maxLength": 180 },
+        "addedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["email", "addedAt"]
+    }
+  },
+  "firestore": {
+    "/products/{productId}": {
+      "schema": { "$ref": "#/entities/Product" },
+      "description": "Publicly readable published catalog; full CRUD restricted to administrators."
+    },
+    "/categories/{categoryId}": {
+      "schema": { "$ref": "#/entities/Category" },
+      "description": "Publicly readable active categories; full CRUD restricted to administrators."
+    },
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "Private customer profiles; isolated strictly to the owning user or administrator."
+    },
+    "/orders/{orderId}": {
+      "schema": { "$ref": "#/entities/Order" },
+      "description": "Orders with customer PII; creation validated, reads/updates restricted to owning user or administrator."
+    },
+    "/orderTracking/{orderNumber}": {
+      "schema": { "$ref": "#/entities/OrderTracking" },
+      "description": "Non-PII shipment status summaries allowing public lookup by exact orderNumber."
+    },
+    "/coupons/{couponId}": {
+      "schema": { "$ref": "#/entities/Coupon" },
+      "description": "Active discount codes readable for cart validation; writes restricted to administrators."
+    },
+    "/reviews/{reviewId}": {
+      "schema": { "$ref": "#/entities/Review" },
+      "description": "Customer reviews; approved reviews publicly readable, creation by verified users, moderation by admins."
+    },
+    "/blogs/{blogId}": {
+      "schema": { "$ref": "#/entities/BlogArticle" },
+      "description": "Educational makhana articles; published posts publicly readable, full CRUD restricted to admins."
+    },
+    "/banners/{bannerId}": {
+      "schema": { "$ref": "#/entities/HeroBanner" },
+      "description": "Homepage hero slides; active slides publicly readable, writes restricted to admins."
+    },
+    "/settings/{settingId}": {
+      "schema": { "$ref": "#/entities/StoreSettings" },
+      "description": "Storefront configuration and editable policies; publicly readable, writes restricted to admins."
+    },
+    "/enquiries/{enquiryId}": {
+      "schema": { "$ref": "#/entities/ContactEnquiry" },
+      "description": "Contact form submissions; validated create allowed, reads/updates strictly admin-only."
+    },
+    "/subscribers/{subscriberId}": {
+      "schema": { "$ref": "#/entities/NewsletterSubscriber" },
+      "description": "Newsletter signups; validated create allowed, reads/deletes strictly admin-only."
+    },
+    "/admins/{adminId}": {
+      "schema": { "$ref": "#/entities/AdminRecord" },
+      "description": "Administrator registry; readable and writable only by existing administrators."
+    }
+  }
+}
