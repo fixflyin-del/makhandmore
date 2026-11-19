@@ -123,10 +123,11 @@ export function OrderConfirmationPage() {
   const whatsappHref = `https://wa.me/${whatsappDigits}?text=${encodeURIComponent(whatsappMessage)}`;
 
   return (
-    <div className="min-h-screen py-7 sm:py-12">
-      <div className="max-w-3xl mx-auto px-3.5 sm:px-6">
+    <div className="py-4 sm:py-8">
+      <div className="max-w-3xl mx-auto px-3 sm:px-6">
         {/* Celebratory Banner */}
-        <div className="relative rounded-[34px] bg-gradient-to-br from-[#0D3B2A] via-[#175C41] to-[#23884D] text-white p-7 sm:p-10 mb-6 text-center overflow-hidden shadow-xl bg-dots-light print:hidden">
+        <div className="relative rounded-[26px] bg-[#0D3B2A] bg-gradient-to-br from-[#0D3B2A] via-[#175C41] to-[#23884D] text-white p-5 sm:p-8 mb-5 text-center overflow-hidden shadow-xl print:hidden">
+          <div className="absolute inset-0 bg-dots-light pointer-events-none" />
           <OrganicBlob
             fill="#B7E843"
             opacity={0.22}

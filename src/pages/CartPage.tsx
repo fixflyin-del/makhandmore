@@ -107,8 +107,9 @@ export function CartPage() {
         </div>
 
         {cart.length === 0 ? (
-          <div className="rounded-[26px] bg-gradient-to-br from-[#EBF9C8] via-[#FFF9EE] to-[#FFF1B8] border-2 border-white p-6 sm:p-10 text-center max-w-2xl mx-auto shadow-md bg-dots-forest">
-            <div className="w-20 h-20 rounded-full bg-[#0D3B2A] text-[#B7E843] flex items-center justify-center mx-auto mb-5 shadow-lg">
+          <div className="relative overflow-hidden rounded-[26px] bg-[#EBF9C8] bg-gradient-to-br from-[#EBF9C8] via-[#FFF9EE] to-[#FFF1B8] border-2 border-white p-6 sm:p-10 text-center max-w-2xl mx-auto shadow-md">
+            <div className="absolute inset-0 bg-dots-forest pointer-events-none" />
+            <div className="relative z-10 w-16 h-16 rounded-full bg-[#0D3B2A] text-[#B7E843] flex items-center justify-center mx-auto mb-4 shadow-lg">
               <ShoppingBag className="w-9 h-9" />
             </div>
             <h2 className="font-display text-2xl sm:text-3xl font-extrabold text-[#0D3B2A] mb-2">

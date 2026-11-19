@@ -128,7 +128,8 @@ export function TrackOrderPage() {
   return (
     <div className="py-3.5 sm:py-6">
       <div className="max-w-3xl mx-auto px-3 sm:px-6">
-        <div className="relative rounded-[24px] bg-gradient-to-br from-[#0D3B2A] via-[#175C41] to-[#23884D] text-white p-5 sm:p-7 text-center mb-4 overflow-hidden shadow-lg bg-dots-light">
+        <div className="relative rounded-[24px] bg-[#0D3B2A] bg-gradient-to-br from-[#0D3B2A] via-[#175C41] to-[#23884D] text-white p-5 sm:p-7 text-center mb-4 overflow-hidden shadow-lg">
+          <div className="absolute inset-0 bg-dots-light pointer-events-none" />
           <OrganicBlob
             fill="#B7E843"
             opacity={0.22}

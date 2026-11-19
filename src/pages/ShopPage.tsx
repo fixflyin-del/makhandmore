@@ -142,7 +142,8 @@ export function ShopPage() {
   return (
     <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-3 sm:py-5">
       {/* Colourful Dotted Banner Header */}
-      <div className="relative rounded-[24px] bg-gradient-to-br from-[#0D3B2A] via-[#175C41] to-[#23884D] text-white p-4 sm:p-6 mb-3.5 overflow-hidden shadow-lg bg-dots-light">
+      <div className="relative rounded-[24px] bg-[#0D3B2A] bg-gradient-to-br from-[#0D3B2A] via-[#175C41] to-[#23884D] text-white p-4 sm:p-6 mb-3.5 overflow-hidden shadow-lg">
+        <div className="absolute inset-0 bg-dots-light pointer-events-none" />
         <OrganicBlob
           fill="#B7E843"
           opacity={0.22}

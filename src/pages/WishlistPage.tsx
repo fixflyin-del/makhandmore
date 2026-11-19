@@ -46,8 +46,9 @@ export function WishlistPage() {
         </div>
 
         {savedProducts.length === 0 ? (
-          <div className="rounded-[26px] bg-gradient-to-br from-[#FFE4E1] via-[#FFF9EE] to-[#FFF1B8] border-2 border-white p-6 sm:p-10 text-center max-w-xl mx-auto shadow-sm bg-dots-coral">
-            <div className="w-16 h-16 rounded-full bg-[#F25C54] text-white flex items-center justify-center mx-auto mb-3.5 shadow-md">
+          <div className="relative overflow-hidden rounded-[26px] bg-[#FFE4E1] bg-gradient-to-br from-[#FFE4E1] via-[#FFF9EE] to-[#FFF1B8] border-2 border-white p-6 sm:p-10 text-center max-w-xl mx-auto shadow-sm">
+            <div className="absolute inset-0 bg-dots-coral pointer-events-none" />
+            <div className="relative z-10 w-16 h-16 rounded-full bg-[#F25C54] text-white flex items-center justify-center mx-auto mb-3.5 shadow-md">
               <Heart className="w-7 h-7" />
             </div>
             <h2 className="font-display text-xl sm:text-2xl font-extrabold text-[#0D3B2A] mb-1.5">

@@ -284,7 +284,8 @@ export function HomePage() {
         </div>
 
         {/* Tight, High-Impact Colourful Hero Card with 1:1 Square Product Showcase */}
-        <div className="relative rounded-[26px] sm:rounded-[34px] bg-gradient-to-br from-[#0D3B2A] via-[#15573D] to-[#23884D] text-white overflow-hidden shadow-[0_14px_38px_rgba(13,59,42,0.2)] bg-dots-light">
+        <div className="relative rounded-[26px] sm:rounded-[34px] bg-[#0D3B2A] bg-gradient-to-br from-[#0D3B2A] via-[#15573D] to-[#23884D] text-white overflow-hidden shadow-[0_14px_38px_rgba(13,59,42,0.22)]">
+          <div className="absolute inset-0 bg-dots-light pointer-events-none" />
           <OrganicBlob
             fill="#B7E843"
             opacity={0.2}
@@ -317,16 +318,16 @@ export function HomePage() {
                   transition={{ duration: 0.3 }}
                   className="space-y-2 sm:space-y-3"
                 >
-                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#B7E843]/20 border border-[#B7E843]/40 text-[#B7E843] text-[11px] font-extrabold tracking-wide">
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#B7E843]/20 border border-[#B7E843]/45 text-[#B7E843] text-[11px] font-extrabold tracking-wide">
                     <Sparkles className="w-3 h-3" />
                     <span>{currentBanner?.eyebrow || 'Healthy Snacking Redefined'}</span>
                   </div>
 
-                  <h1 className="font-display text-2xl sm:text-4xl lg:text-[3rem] font-extrabold leading-[1.06] tracking-tight text-white">
+                  <h1 className="font-display text-2xl sm:text-4xl lg:text-[3rem] font-extrabold leading-[1.06] tracking-tight text-white drop-shadow-xs">
                     {currentBanner?.title || 'Pure. Natural. Delicious.'}
                   </h1>
 
-                  <p className="text-xs sm:text-sm lg:text-base text-[#FFF9EE]/88 leading-relaxed max-w-lg">
+                  <p className="text-xs sm:text-sm lg:text-base text-[#FFF9EE]/92 leading-relaxed max-w-lg">
                     {currentBanner?.subtitle ||
                       'Wholesome Mithila Makhana snacks crafted with care in Darbhanga. Roasted, never fried — bursting with real Indian flavours.'}
                   </p>
@@ -345,7 +346,7 @@ export function HomePage() {
 
                 <Link
                   to="/category/makhana-combo"
-                  className="inline-flex items-center gap-1.5 h-11 px-4 sm:px-5 rounded-full bg-white/14 hover:bg-white/22 backdrop-blur-xs border border-white/25 text-white text-xs sm:text-sm font-bold transition-colors whitespace-nowrap"
+                  className="inline-flex items-center gap-1.5 h-11 px-4 sm:px-5 rounded-full bg-white/15 hover:bg-white/25 backdrop-blur-xs border border-white/35 text-white text-xs sm:text-sm font-bold transition-colors whitespace-nowrap"
                 >
                   4-Flavour Combo
                 </Link>
@@ -358,9 +359,9 @@ export function HomePage() {
               </div>
 
               {/* Compact Offer Perks & Slide Dots */}
-              <div className="pt-2.5 flex flex-wrap items-center justify-between gap-2.5 border-t border-white/15">
-                <div className="flex flex-wrap items-center gap-x-2.5 gap-y-0.5 text-[11px] sm:text-xs font-semibold text-[#FFF9EE]/85">
-                  <span className="text-[#F4B926]">
+              <div className="pt-2.5 flex flex-wrap items-center justify-between gap-2.5 border-t border-white/20">
+                <div className="flex flex-wrap items-center gap-x-2.5 gap-y-0.5 text-[11px] sm:text-xs font-semibold text-[#FFF9EE]/92">
+                  <span className="text-[#F4B926] font-bold">
                     Free Shipping ₹{settings.freeShippingThreshold}+
                   </span>
                   <span aria-hidden="true">•</span>
@@ -381,7 +382,7 @@ export function HomePage() {
                         className={`h-2 rounded-full transition-all cursor-pointer ${
                           activeSlide === index
                             ? 'w-7 bg-[#B7E843]'
-                            : 'w-2 bg-white/35 hover:bg-white/60'
+                            : 'w-2 bg-white/45 hover:bg-white/75'
                         }`}
                       />
                     ))}
@@ -955,7 +956,8 @@ export function HomePage() {
 
       {/* 10. COLOURFUL NEWSLETTER BOX */}
       <section className="max-w-5xl mx-auto px-3 sm:px-6 lg:px-8 pb-3">
-        <div className="relative rounded-[26px] bg-gradient-to-br from-[#B7E843] via-[#D8F786] to-[#FFF1B8] p-5 sm:p-8 text-center overflow-hidden shadow-md bg-dots-forest">
+        <div className="relative rounded-[26px] bg-[#D8F786] bg-gradient-to-br from-[#B7E843] via-[#D8F786] to-[#FFF1B8] p-5 sm:p-8 text-center overflow-hidden shadow-md">
+          <div className="absolute inset-0 bg-dots-forest pointer-events-none" />
           <AnimatedSparkle className="w-6 h-6 absolute top-4 left-6" color="#0D3B2A" />
           <AnimatedSparkle className="w-5 h-5 absolute bottom-4 right-6" color="#FF7F3E" delay={1} />
 
