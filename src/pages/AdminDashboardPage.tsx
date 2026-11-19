@@ -24,6 +24,7 @@ import {
   ArrowLeft,
   Check,
   Database,
+  Delete,
   Download,
   Edit3,
   FileText,
@@ -31,6 +32,7 @@ import {
   Image as ImageIcon,
   LayoutDashboard,
   Loader2,
+  Lock,
   Mail,
   MessageSquare,
   Package,
@@ -53,7 +55,7 @@ import { useAuth } from '../context/AuthContext';
 import { useStore } from '../context/StoreContext';
 import { OFFICIAL_ASSETS } from '../data/seedData';
 import { uploadImageToCloudinary } from '../lib/cloudinary';
-import { ADMIN_BOOTSTRAP_EMAIL, db, handleFirestoreError, OperationType } from '../lib/firebase';
+import { db, handleFirestoreError, OperationType } from '../lib/firebase';
 import { useSEO } from '../lib/seo';
 import {
   BlogArticle,
@@ -102,9 +104,18 @@ function toSlug(val: string): string {
     .replace(/(^-|-$)/g, '');
 }
 
+const ADMIN_PIN = '9090';
+const ADMIN_PIN_STORAGE_KEY = 'makh_admin_pin_unlocked';
+
 export function AdminDashboardPage() {
-  const { user, isAdmin, loading: authLoading, signInWithGoogle } = useAuth();
+  const { user } = useAuth();
   const {
+    products: storeProducts,
+    categories: storeCategories,
+    banners: storeBanners,
+    blogs: storeBlogs,
+    coupons: storeCoupons,
+    reviews: storeReviews,
     settings,
     firestoreSeeded,
     seedFirestoreDatabase,
@@ -119,18 +130,28 @@ export function AdminDashboardPage() {
     noindex: true,
   });
 
+  const [pinUnlocked, setPinUnlocked] = useState<boolean>(() => {
+    try {
+      return sessionStorage.getItem(ADMIN_PIN_STORAGE_KEY) === '1';
+    } catch {
+      return false;
+    }
+  });
+  const [pinInput, setPinInput] = useState('');
+  const [pinError, setPinError] = useState('');
+
   const [tab, setTab] = useState<AdminTab>('overview');
   const [loadingData, setLoadingData] = useState(false);
   const [seeding, setSeeding] = useState(false);
 
   // Full Admin Firestore collections (including unpublished/inactive items)
-  const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<Product[]>(storeProducts);
   const [orders, setOrders] = useState<Order[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [coupons, setCoupons] = useState<Coupon[]>([]);
-  const [banners, setBanners] = useState<HeroBanner[]>([]);
-  const [blogs, setBlogs] = useState<BlogArticle[]>([]);
-  const [reviews, setReviews] = useState<Review[]>([]);
+  const [categories, setCategories] = useState<Category[]>(storeCategories);
+  const [coupons, setCoupons] = useState<Coupon[]>(storeCoupons);
+  const [banners, setBanners] = useState<HeroBanner[]>(storeBanners);
+  const [blogs, setBlogs] = useState<BlogArticle[]>(storeBlogs);
+  const [reviews, setReviews] = useState<Review[]>(storeReviews);
   const [customers, setCustomers] = useState<UserProfile[]>([]);
   const [enquiries, setEnquiries] = useState<ContactEnquiry[]>([]);
   const [subscribers, setSubscribers] = useState<NewsletterSubscriber[]>([]);
@@ -165,7 +186,7 @@ export function AdminDashboardPage() {
   }, [settings]);
 
   const loadAllAdminData = useCallback(async () => {
-    if (!isAdmin) return;
+    if (!pinUnlocked) return;
     setLoadingData(true);
     try {
       const [
@@ -192,8 +213,10 @@ export function AdminDashboardPage() {
         getDocs(collection(db, 'subscribers')),
       ]);
 
-      if (prodSnap.status === 'fulfilled') {
+      if (prodSnap.status === 'fulfilled' && !prodSnap.value.empty) {
         setProducts(prodSnap.value.docs.map((d) => ({ ...(d.data() as Product), id: d.id })));
+      } else {
+        setProducts(storeProducts);
       }
       if (ordSnap.status === 'fulfilled') {
         setOrders(
@@ -202,28 +225,38 @@ export function AdminDashboardPage() {
             .sort((a, b) => String(b.orderNumber).localeCompare(String(a.orderNumber)))
         );
       }
-      if (catSnap.status === 'fulfilled') {
+      if (catSnap.status === 'fulfilled' && !catSnap.value.empty) {
         setCategories(
           catSnap.value.docs
             .map((d) => ({ ...(d.data() as Category), id: d.id }))
             .sort((a, b) => (a.order || 0) - (b.order || 0))
         );
+      } else {
+        setCategories(storeCategories);
       }
-      if (coupSnap.status === 'fulfilled') {
+      if (coupSnap.status === 'fulfilled' && !coupSnap.value.empty) {
         setCoupons(coupSnap.value.docs.map((d) => ({ ...(d.data() as Coupon), id: d.id })));
+      } else {
+        setCoupons(storeCoupons);
       }
-      if (banSnap.status === 'fulfilled') {
+      if (banSnap.status === 'fulfilled' && !banSnap.value.empty) {
         setBanners(
           banSnap.value.docs
             .map((d) => ({ ...(d.data() as HeroBanner), id: d.id }))
             .sort((a, b) => (a.order || 0) - (b.order || 0))
         );
+      } else {
+        setBanners(storeBanners);
       }
-      if (blogSnap.status === 'fulfilled') {
+      if (blogSnap.status === 'fulfilled' && !blogSnap.value.empty) {
         setBlogs(blogSnap.value.docs.map((d) => ({ ...(d.data() as BlogArticle), id: d.id })));
+      } else {
+        setBlogs(storeBlogs);
       }
-      if (revSnap.status === 'fulfilled') {
+      if (revSnap.status === 'fulfilled' && !revSnap.value.empty) {
         setReviews(revSnap.value.docs.map((d) => ({ ...(d.data() as Review), id: d.id })));
+      } else {
+        setReviews(storeReviews);
       }
       if (userSnap.status === 'fulfilled') {
         setCustomers(userSnap.value.docs.map((d) => ({ ...(d.data() as UserProfile), uid: d.id })));
@@ -239,13 +272,21 @@ export function AdminDashboardPage() {
     } finally {
       setLoadingData(false);
     }
-  }, [isAdmin]);
+  }, [
+    pinUnlocked,
+    storeProducts,
+    storeCategories,
+    storeCoupons,
+    storeBanners,
+    storeBlogs,
+    storeReviews,
+  ]);
 
   useEffect(() => {
-    if (isAdmin) {
+    if (pinUnlocked) {
       loadAllAdminData();
     }
-  }, [isAdmin, loadAllAdminData]);
+  }, [pinUnlocked, loadAllAdminData]);
 
   // Analytics KPIs
   const kpis = useMemo(() => {
@@ -696,52 +737,173 @@ export function AdminDashboardPage() {
     URL.revokeObjectURL(url);
   };
 
-  // --- ACCESS GATE ---
-  if (authLoading) {
-    return (
-      <div className="min-h-screen bg-cream flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-forest" />
-      </div>
-    );
-  }
+  // --- PIN-ONLY ACCESS GATE (9090 ONLY) ---
+  const verifyPin = (candidate: string) => {
+    if (candidate === ADMIN_PIN) {
+      try {
+        sessionStorage.setItem(ADMIN_PIN_STORAGE_KEY, '1');
+      } catch {
+        // ignore storage errors
+      }
+      setPinError('');
+      setPinInput('');
+      setPinUnlocked(true);
+      showToast('Admin Panel unlocked!');
+    } else {
+      setPinError('Incorrect PIN. Please try again.');
+      setPinInput('');
+    }
+  };
 
-  if (!user || !isAdmin) {
+  const handlePinDigit = (digit: string) => {
+    if (pinInput.length >= 4) return;
+    setPinError('');
+    const next = `${pinInput}${digit}`;
+    setPinInput(next);
+    if (next.length === 4) {
+      verifyPin(next);
+    }
+  };
+
+  const handlePinBackspace = () => {
+    setPinError('');
+    setPinInput((prev) => prev.slice(0, -1));
+  };
+
+  const handlePinLock = () => {
+    try {
+      sessionStorage.removeItem(ADMIN_PIN_STORAGE_KEY);
+    } catch {
+      // ignore
+    }
+    setPinUnlocked(false);
+    setPinInput('');
+    setPinError('');
+    showToast('Admin Panel locked.', 'info');
+  };
+
+  if (!pinUnlocked) {
     return (
-      <div className="min-h-screen bg-cream flex items-center justify-center px-4 py-16">
-        <div className="max-w-md w-full bg-white rounded-3xl border border-forest/10 p-8 text-center shadow-sm">
-          <BrandLogo className="h-12 mx-auto mb-4" />
-          <div className="w-12 h-12 rounded-2xl bg-forest/5 text-forest flex items-center justify-center mx-auto mb-4">
-            <ShieldCheck className="w-6 h-6" />
+      <div className="min-h-screen bg-[#FFF9EE] bg-dots-light flex items-center justify-center px-4 py-8">
+        <div className="max-w-sm w-full bg-white rounded-[30px] border-2 border-[#0D3B2A]/10 p-6 sm:p-7 text-center shadow-xl">
+          <BrandLogo className="h-10 mx-auto mb-3" />
+          <div className="w-12 h-12 rounded-2xl bg-[#EBF9C8] text-[#0D3B2A] flex items-center justify-center mx-auto mb-3">
+            <Lock className="w-6 h-6" />
           </div>
-          <h1 className="font-serif text-2xl font-semibold text-forest">
-            MAKH AND MORE Admin Portal
+          <h1 className="font-display text-2xl font-extrabold text-[#0D3B2A]">
+            Admin PIN Lock
           </h1>
-          <p className="text-xs text-ink/70 mt-2 leading-relaxed">
-            {user
-              ? `Signed in as ${user.email}, which does not have administrator privileges. Sign in with the authorized store admin Google account (${ADMIN_BOOTSTRAP_EMAIL}).`
-              : 'Restricted to authorized ASR Enterprises administrators. Sign in with your admin Google account to manage products, orders, banners, and settings.'}
+          <p className="text-xs text-[#4A5E54] mt-1">
+            Enter the 4-digit Admin PIN to manage MAKH AND MORE.
           </p>
-          <div className="mt-6 space-y-3">
-            <button
-              type="button"
-              onClick={async () => {
-                try {
-                  await signInWithGoogle();
-                } catch {
-                  showToast('Sign-in cancelled or failed.', 'error');
+
+          {/* 4-Digit PIN Visual Indicators */}
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              verifyPin(pinInput);
+            }}
+            className="mt-5"
+          >
+            <div className="flex items-center justify-center gap-3 mb-3">
+              {[0, 1, 2, 3].map((idx) => {
+                const filled = idx < pinInput.length;
+                return (
+                  <div
+                    key={idx}
+                    className={`w-12 h-12 rounded-2xl border-2 flex items-center justify-center text-xl font-extrabold transition-all ${
+                      pinError
+                        ? 'border-[#F25C54] bg-[#FFE4E1]/40 text-[#C83B24]'
+                        : filled
+                        ? 'border-[#0D3B2A] bg-[#EBF9C8] text-[#0D3B2A]'
+                        : 'border-[#0D3B2A]/15 bg-[#FFF9EE] text-[#0D3B2A]/30'
+                    }`}
+                  >
+                    {filled ? '•' : ''}
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Direct keyboard input for desktop / mobile paste */}
+            <input
+              type="password"
+              inputMode="numeric"
+              maxLength={4}
+              autoFocus
+              aria-label="Enter 4-digit Admin PIN"
+              value={pinInput}
+              onChange={(e) => {
+                const clean = e.target.value.replace(/\D/g, '').slice(0, 4);
+                setPinError('');
+                setPinInput(clean);
+                if (clean.length === 4) {
+                  verifyPin(clean);
                 }
               }}
-              className="w-full py-3 rounded-full bg-forest text-cream text-sm font-semibold hover:bg-forest-light"
+              placeholder="Enter 4-digit PIN"
+              className="w-full h-11 px-4 rounded-2xl border border-[#0D3B2A]/15 bg-[#FFF9EE]/70 text-center text-sm font-mono font-bold tracking-[0.4em] text-[#0D3B2A] focus:outline-none focus:border-[#0D3B2A]"
+            />
+
+            {pinError && (
+              <p className="mt-2.5 text-xs font-bold text-[#C83B24] bg-[#FFE4E1] py-2 px-3 rounded-xl">
+                {pinError}
+              </p>
+            )}
+
+            {/* Touch-Friendly Numeric Keypad */}
+            <div className="grid grid-cols-3 gap-2.5 mt-4">
+              {['1', '2', '3', '4', '5', '6', '7', '8', '9'].map((digit) => (
+                <button
+                  key={digit}
+                  type="button"
+                  onClick={() => handlePinDigit(digit)}
+                  className="h-12 rounded-2xl bg-[#FFF9EE] border border-[#0D3B2A]/12 font-display text-lg font-extrabold text-[#0D3B2A] hover:bg-[#EBF9C8] active:scale-95 transition-all cursor-pointer"
+                >
+                  {digit}
+                </button>
+              ))}
+              <button
+                type="button"
+                onClick={() => {
+                  setPinInput('');
+                  setPinError('');
+                }}
+                className="h-12 rounded-2xl bg-[#FFE4E1]/70 text-xs font-extrabold text-[#C83B24] hover:bg-[#FFE4E1] active:scale-95 transition-all cursor-pointer"
+              >
+                Clear
+              </button>
+              <button
+                type="button"
+                onClick={() => handlePinDigit('0')}
+                className="h-12 rounded-2xl bg-[#FFF9EE] border border-[#0D3B2A]/12 font-display text-lg font-extrabold text-[#0D3B2A] hover:bg-[#EBF9C8] active:scale-95 transition-all cursor-pointer"
+              >
+                0
+              </button>
+              <button
+                type="button"
+                onClick={handlePinBackspace}
+                aria-label="Backspace"
+                className="h-12 rounded-2xl bg-[#FFF1B8] text-[#0D3B2A] hover:bg-[#F4B926]/60 active:scale-95 transition-all flex items-center justify-center cursor-pointer"
+              >
+                <Delete className="w-5 h-5" />
+              </button>
+            </div>
+
+            <button
+              type="submit"
+              className="mt-4 w-full h-11 rounded-full bg-[#0D3B2A] text-[#B7E843] text-sm font-extrabold hover:bg-[#175C41] transition-colors cursor-pointer shadow-md"
             >
-              Sign In with Admin Google Account
+              Unlock Admin Panel
             </button>
-            <Link
-              to="/"
-              className="block w-full py-2.5 rounded-full border border-forest/20 text-forest text-xs font-semibold hover:bg-forest/5"
-            >
-              Return to Storefront
-            </Link>
-          </div>
+          </form>
+
+          <Link
+            to="/"
+            className="mt-3 block w-full py-2.5 rounded-full border border-[#0D3B2A]/15 text-[#0D3B2A] text-xs font-bold hover:bg-[#0D3B2A]/5"
+          >
+            Return to Storefront
+          </Link>
         </div>
       </div>
     );
@@ -774,19 +936,29 @@ export function AdminDashboardPage() {
   return (
     <div className="min-h-screen bg-cream flex flex-col lg:flex-row">
       {/* Admin Sidebar */}
-      <aside className="lg:w-64 bg-forest text-cream shrink-0 p-5 flex flex-col">
-        <div className="flex items-center justify-between lg:block mb-6">
-          <BrandLogo variant="dark-bg" className="h-10" />
-          <Link
-            to="/"
-            className="lg:mt-4 inline-flex items-center gap-1.5 text-xs text-cream/75 hover:text-gold"
-          >
-            <ArrowLeft className="w-3.5 h-3.5" />
-            View Live Storefront
-          </Link>
+      <aside className="lg:w-64 bg-forest text-cream shrink-0 p-3.5 sm:p-5 flex flex-col">
+        <div className="flex items-center justify-between lg:block mb-3 lg:mb-5">
+          <BrandLogo variant="dark-bg" className="h-9 sm:h-10" />
+          <div className="flex items-center gap-2 lg:mt-3">
+            <Link
+              to="/"
+              className="inline-flex items-center gap-1 text-xs text-cream/80 hover:text-gold"
+            >
+              <ArrowLeft className="w-3.5 h-3.5" />
+              Storefront
+            </Link>
+            <button
+              type="button"
+              onClick={handlePinLock}
+              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-cream/10 hover:bg-cream/20 text-[11px] font-bold text-[#B7E843] cursor-pointer"
+            >
+              <Lock className="w-3 h-3" />
+              Lock
+            </button>
+          </div>
         </div>
 
-        <nav className="flex lg:flex-col gap-1 overflow-x-auto pb-2 lg:pb-0">
+        <nav className="flex lg:flex-col gap-1 overflow-x-auto pb-1 lg:pb-0 no-scrollbar">
           {navTabs.map((item) => {
             const Icon = item.icon;
             return (
@@ -794,7 +966,7 @@ export function AdminDashboardPage() {
                 key={item.id}
                 type="button"
                 onClick={() => setTab(item.id)}
-                className={`px-3.5 py-2.5 rounded-xl text-xs font-semibold flex items-center gap-2.5 whitespace-nowrap transition-colors text-left ${
+                className={`px-3 py-2 rounded-xl text-xs font-semibold flex items-center gap-2 whitespace-nowrap transition-colors text-left cursor-pointer ${
                   tab === item.id
                     ? 'bg-gold text-forest'
                     : 'text-cream/80 hover:bg-cream/10 hover:text-cream'
@@ -807,22 +979,22 @@ export function AdminDashboardPage() {
           })}
         </nav>
 
-        <div className="hidden lg:block mt-auto pt-6 border-t border-cream/15 text-[11px] text-cream/65">
+        <div className="hidden lg:block mt-auto pt-4 border-t border-cream/15 text-[11px] text-cream/65">
           <p className="font-semibold text-cream">ASR ENTERPRISES</p>
-          <p className="truncate">{user.email}</p>
+          <p className="truncate">{user?.email || 'Admin PIN Session'}</p>
         </div>
       </aside>
 
       {/* Main Workspace */}
-      <main className="flex-1 p-5 sm:p-8 overflow-x-hidden">
+      <main className="flex-1 p-3.5 sm:p-6 overflow-x-hidden">
         {/* Top Action Bar */}
-        <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
           <div>
-            <h1 className="font-serif text-2xl sm:text-3xl font-semibold text-forest capitalize">
+            <h1 className="font-serif text-xl sm:text-3xl font-semibold text-forest capitalize">
               {tab === 'overview' ? 'Store Overview & Analytics' : tab}
             </h1>
             <p className="text-xs text-ink/60">
-              Live Firebase Firestore database for MAKH AND MORE
+              Live store management for MAKH AND MORE
             </p>
           </div>
 
@@ -1293,7 +1465,7 @@ export function AdminDashboardPage() {
                   key={bn.id}
                   className="bg-white rounded-2xl border border-forest/10 p-5 flex gap-4 shadow-xs"
                 >
-                  <div className="w-24 h-20 rounded-xl bg-cream overflow-hidden shrink-0">
+                  <div className="w-20 h-20 aspect-square rounded-xl bg-cream overflow-hidden shrink-0">
                     <SafeImage src={bn.image} alt={bn.title} className="w-full h-full object-cover" />
                   </div>
                   <div className="flex-1 min-w-0">

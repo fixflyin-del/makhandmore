@@ -90,35 +90,35 @@ export function OurStoryPage() {
           className="w-24 h-24 absolute bottom-10 left-4 opacity-50 pointer-events-none hidden sm:block"
         />
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-16 sm:pt-16 sm:pb-24 grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-          <div className="lg:col-span-6 space-y-5">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#B7E843]/15 border border-[#B7E843]/35 text-[#B7E843] text-xs font-bold tracking-wide">
+        <div className="relative max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8 pt-5 pb-8 sm:pt-9 sm:pb-12 grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-8 items-center">
+          <div className="lg:col-span-6 space-y-3.5">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#B7E843]/15 border border-[#B7E843]/35 text-[#B7E843] text-[11px] font-bold tracking-wide">
               <MapPin className="w-3.5 h-3.5" />
               Proudly Crafted in Mithila · Darbhanga, Bihar
             </div>
 
-            <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-[1.04] tracking-tight">
+            <h1 className="font-display text-3xl sm:text-5xl font-extrabold leading-[1.06] tracking-tight">
               From Mithila’s Sacred{' '}
               <span className="text-[#B7E843]">Wetlands</span> to Your Snack Bowl.
             </h1>
 
-            <p className="text-base text-[#FFF9EE]/85 leading-relaxed max-w-xl">
+            <p className="text-sm sm:text-base text-[#FFF9EE]/85 leading-relaxed max-w-xl">
               MAKH AND MORE was born in Darbhanga with a single belief: India deserves makhana that
               tastes as fresh, bold, and pure as the harvest our Mithila farmers take pride in every
               season.
             </p>
 
-            <div className="flex flex-wrap items-center gap-3 pt-2">
+            <div className="flex flex-wrap items-center gap-2.5 pt-1">
               <Link
                 to="/shop"
-                className="min-h-[46px] px-7 py-3 rounded-full bg-[#B7E843] text-[#0D3B2A] font-display font-bold text-sm hover:bg-[#c8f261] transition-all shadow-lg shadow-black/15 inline-flex items-center gap-2"
+                className="h-11 px-6 rounded-full bg-[#B7E843] text-[#0D3B2A] font-display font-bold text-xs sm:text-sm hover:bg-[#c8f261] transition-all shadow-lg shadow-black/15 inline-flex items-center gap-2"
               >
                 Explore the Harvest
                 <ArrowRight className="w-4 h-4" />
               </Link>
               <Link
                 to="/about-us"
-                className="min-h-[46px] px-7 py-3 rounded-full bg-white/10 border border-white/25 text-[#FFF9EE] font-semibold text-sm hover:bg-white/20 transition-colors inline-flex items-center"
+                className="h-11 px-5 rounded-full bg-white/10 border border-white/25 text-[#FFF9EE] font-semibold text-xs sm:text-sm hover:bg-white/20 transition-colors inline-flex items-center"
               >
                 About ASR Enterprises
               </Link>
@@ -133,17 +133,17 @@ export function OurStoryPage() {
           <div className="lg:col-span-6 relative">
             <AnimatedSparkle
               color="#F4B926"
-              className="w-8 h-8 absolute -top-3 -left-2 z-10 pointer-events-none"
+              className="w-7 h-7 absolute -top-2 -left-1 z-10 pointer-events-none"
             />
-            <div className="rounded-[2rem] overflow-hidden border-4 border-[#B7E843]/40 shadow-2xl bg-[#09291D]">
+            <div className="w-full max-w-[320px] sm:max-w-[390px] mx-auto aspect-square rounded-[26px] overflow-hidden border-4 border-[#B7E843]/40 shadow-2xl bg-[#09291D]">
               <SafeImage
                 src={OFFICIAL_ASSETS.farmer}
                 alt="Mithila farmers harvesting makhana in Darbhanga ponds"
-                className="w-full h-[290px] sm:h-[410px] object-cover"
+                className="w-full h-full object-cover"
                 priority
               />
             </div>
-            <div className="mt-3 inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-white/10 backdrop-blur-xs border border-white/15 text-xs text-[#FFF9EE]/90">
+            <div className="mt-2.5 max-w-[390px] mx-auto flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-white/10 backdrop-blur-xs border border-white/15 text-[11px] text-[#FFF9EE]/90">
               <Leaf className="w-3.5 h-3.5 text-[#B7E843] shrink-0" />
               Traditional lotus seed harvesting in the fertile wetlands of Mithila, Bihar.
             </div>
@@ -154,52 +154,52 @@ export function OurStoryPage() {
       </section>
 
       {/* Colourful 4-Step Farm-to-Home Journey */}
-      <section className="relative py-14 sm:py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
+      <section className="relative py-6 sm:py-10 max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-5">
           <div className="max-w-2xl">
-            <span className="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-[0.18em] text-[#23884D]">
+            <span className="inline-flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-[0.18em] text-[#23884D]">
               <Sparkles className="w-3.5 h-3.5 text-[#F4B926]" />
               Farm-to-Home Craft
             </span>
-            <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-[#0D3B2A] mt-2 leading-tight">
+            <h2 className="font-display text-2xl sm:text-3xl font-extrabold text-[#0D3B2A] mt-1 leading-tight">
               Four Careful Steps Behind Every Crisp Kernel
             </h2>
           </div>
           <CurvedGuideArrow
             direction="down-right"
             color="#23884D"
-            className="w-24 h-14 hidden md:block shrink-0"
+            className="w-20 h-12 hidden md:block shrink-0"
           />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 sm:gap-5">
           {journeySteps.map((item, idx) => {
             const Icon = item.icon;
             return (
               <motion.div
                 key={item.step}
-                initial={{ opacity: 0, y: 18 }}
+                initial={{ opacity: 0, y: 14 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.2 }}
-                transition={{ delay: idx * 0.07, duration: 0.45 }}
-                className={`relative overflow-hidden ${item.cardBg} rounded-[2rem] border border-[#0D3B2A]/8 p-6 sm:p-8 shadow-xs flex flex-col gap-4`}
+                transition={{ delay: idx * 0.06, duration: 0.4 }}
+                className={`relative overflow-hidden ${item.cardBg} rounded-[24px] border border-[#0D3B2A]/8 p-4 sm:p-6 shadow-xs flex flex-col gap-2.5`}
               >
                 <div className="flex items-center justify-between">
                   <span
-                    className={`font-mono text-2xl font-extrabold tracking-tight ${item.stepColor}`}
+                    className={`font-mono text-xl font-extrabold tracking-tight ${item.stepColor}`}
                   >
                     {item.step}
                   </span>
                   <div
-                    className={`w-12 h-12 rounded-2xl ${item.iconBg} flex items-center justify-center shadow-sm`}
+                    className={`w-10 h-10 rounded-2xl ${item.iconBg} flex items-center justify-center shadow-sm`}
                   >
                     <Icon className="w-5 h-5" />
                   </div>
                 </div>
-                <h3 className="font-display text-xl sm:text-2xl font-bold text-[#0D3B2A] leading-snug">
+                <h3 className="font-display text-lg sm:text-xl font-bold text-[#0D3B2A] leading-snug">
                   {item.title}
                 </h3>
-                <p className="text-sm text-[#12261E]/80 leading-relaxed">{item.text}</p>
+                <p className="text-xs sm:text-sm text-[#12261E]/80 leading-relaxed">{item.text}</p>
               </motion.div>
             );
           })}
@@ -207,26 +207,26 @@ export function OurStoryPage() {
       </section>
 
       {/* Split Feature: Jumbo + Flavours */}
-      <section className="pb-16 sm:pb-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="relative bg-white rounded-[2.25rem] border-2 border-[#0D3B2A]/8 p-6 sm:p-10 lg:p-12 shadow-sm grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center overflow-hidden">
-          <FloatingLotusLeaf className="w-20 h-20 absolute -top-4 -right-4 opacity-55 pointer-events-none" />
+      <section className="pb-8 sm:pb-12 max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8">
+        <div className="relative bg-white rounded-[28px] border-2 border-[#0D3B2A]/8 p-4 sm:p-7 lg:p-9 shadow-sm grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-8 items-center overflow-hidden">
+          <FloatingLotusLeaf className="w-16 h-16 absolute -top-3 -right-3 opacity-55 pointer-events-none" />
 
           <div className="lg:col-span-5">
-            <div className="relative rounded-[1.75rem] bg-gradient-to-br from-[#EBF9C8] via-[#FFF1B8] to-[#FFE7D4] p-6 sm:p-8 flex items-center justify-center overflow-hidden">
+            <div className="relative w-full max-w-[300px] sm:max-w-[340px] mx-auto aspect-square rounded-[22px] bg-gradient-to-br from-[#EBF9C8] via-[#FFF1B8] to-[#FFE7D4] p-4 sm:p-5 flex items-center justify-center overflow-hidden">
               <OrbitCircles
                 dotColor="#FF7F3E"
                 ringColor="#23884D"
-                className="w-72 h-72 absolute opacity-65"
+                className="w-64 h-64 absolute opacity-65"
               />
               <SafeImage
                 src={OFFICIAL_ASSETS.heroSnacks}
                 alt="MAKH AND MORE Jumbo Makhana pouch and bowl"
-                className="relative z-10 w-full max-h-72 object-contain rounded-2xl drop-shadow-md"
+                className="relative z-10 w-full h-full object-contain rounded-2xl drop-shadow-md"
               />
             </div>
           </div>
 
-          <div className="lg:col-span-7 space-y-5">
+          <div className="lg:col-span-7 space-y-3.5">
             <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#E2F6E7] text-[#156C3D] text-xs font-extrabold uppercase tracking-wider">
               Healthy Snacking Redefined
             </span>
@@ -322,14 +322,14 @@ export function AboutUsPage() {
   ];
 
   return (
-    <div className="bg-[#FFF9EE] pb-16 sm:pb-24 overflow-hidden">
+    <div className="bg-[#FFF9EE] pb-8 sm:pb-12 overflow-hidden">
       {/* Compact Dotted Header Strip */}
       <section className="relative bg-gradient-to-br from-[#0D3B2A] to-[#1A5E42] text-[#FFF9EE] overflow-hidden">
         <div className="absolute inset-0 bg-dots-forest opacity-35 pointer-events-none" />
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-12 sm:pt-12 sm:pb-16">
+        <div className="relative max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8 pt-4 pb-6 sm:pt-7 sm:pb-9">
           <nav
             aria-label="Breadcrumb"
-            className="text-xs text-[#FFF9EE]/70 mb-4 flex items-center gap-2 font-medium"
+            className="text-xs text-[#FFF9EE]/70 mb-2.5 flex items-center gap-2 font-medium"
           >
             <Link to="/" className="hover:text-[#B7E843] transition-colors">
               Home
@@ -337,42 +337,42 @@ export function AboutUsPage() {
             <span>/</span>
             <span className="text-[#B7E843] font-bold">About Us</span>
           </nav>
-          <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#B7E843]/15 border border-[#B7E843]/35 text-[#B7E843] text-xs font-bold uppercase tracking-wider">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#B7E843]/15 border border-[#B7E843]/35 text-[#B7E843] text-[11px] font-bold uppercase tracking-wider">
             Owned & Operated by ASR ENTERPRISES
           </span>
-          <h1 className="font-display text-3xl sm:text-5xl font-extrabold leading-tight mt-3 max-w-3xl">
+          <h1 className="font-display text-2xl sm:text-4xl font-extrabold leading-tight mt-2 max-w-3xl">
             Bringing Mithila’s Heritage Super-Snack to Every Indian Pantry.
           </h1>
         </div>
         <WavySectionDivider fill="#FFF9EE" />
       </section>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center mb-14">
-          <div className="lg:col-span-7 space-y-5">
-            <p className="text-base text-[#12261E]/85 leading-relaxed">
+      <div className="max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8 pt-4 sm:pt-6">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-8 items-center mb-7 sm:mb-9">
+          <div className="lg:col-span-7 space-y-3.5">
+            <p className="text-sm sm:text-base text-[#12261E]/85 leading-relaxed">
               <strong className="text-[#0D3B2A]">MAKH AND MORE</strong> is the flagship consumer
               food brand of <strong className="text-[#0D3B2A]">ASR ENTERPRISES</strong>, based in
               Darbhanga, Bihar. Founded to bridge the gap between traditional Mithila makhana farmers
               and health-conscious modern families, we focus on consistent jumbo kernel grading,
               clean slow-roasting, and bold yet balanced flavours.
             </p>
-            <p className="text-sm sm:text-base text-[#4A5E54] leading-relaxed">
+            <p className="text-xs sm:text-sm text-[#4A5E54] leading-relaxed">
               From raw 100g and 200g Premium Jumbo Makhana pouches for traditional cooking to our
               4-Flavour Roasted Collection (Pudina, Peri Peri, Cheese, and Himalayan Salt), every
               jar reflects our tagline:{' '}
               <em className="font-semibold text-[#0D3B2A]">Healthy Snacking Redefined.</em>
             </p>
-            <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 text-sm text-[#0D3B2A] font-semibold">
-              <li className="flex items-center gap-2.5 bg-white rounded-2xl px-4 py-3 border border-[#0D3B2A]/8 shadow-xs">
+            <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1 text-xs sm:text-sm text-[#0D3B2A] font-semibold">
+              <li className="flex items-center gap-2 bg-white rounded-2xl px-3.5 py-2.5 border border-[#0D3B2A]/8 shadow-xs">
                 <CheckCircle2 className="w-4 h-4 text-[#23884D] shrink-0" />
                 Direct sourcing from Darbhanga wetlands
               </li>
-              <li className="flex items-center gap-2.5 bg-white rounded-2xl px-4 py-3 border border-[#0D3B2A]/8 shadow-xs">
+              <li className="flex items-center gap-2 bg-white rounded-2xl px-3.5 py-2.5 border border-[#0D3B2A]/8 shadow-xs">
                 <CheckCircle2 className="w-4 h-4 text-[#23884D] shrink-0" />
                 Hygienically roasted & sealed fresh
               </li>
-              <li className="flex items-center gap-2.5 bg-white rounded-2xl px-4 py-3 border border-[#0D3B2A]/8 shadow-xs sm:col-span-2">
+              <li className="flex items-center gap-2 bg-white rounded-2xl px-3.5 py-2.5 border border-[#0D3B2A]/8 shadow-xs sm:col-span-2">
                 <CheckCircle2 className="w-4 h-4 text-[#23884D] shrink-0" />
                 Transparent pricing, COD & Pan-India doorstep shipping
               </li>
@@ -380,44 +380,44 @@ export function AboutUsPage() {
           </div>
 
           <div className="lg:col-span-5">
-            <div className="relative bg-gradient-to-br from-[#FFF1B8] via-[#FFE7D4] to-[#EBF9C8] rounded-[2rem] border border-[#0D3B2A]/8 p-6 sm:p-8 shadow-sm overflow-hidden">
+            <div className="relative w-full max-w-[300px] sm:max-w-[350px] mx-auto aspect-square bg-gradient-to-br from-[#FFF1B8] via-[#FFE7D4] to-[#EBF9C8] rounded-[26px] border border-[#0D3B2A]/8 p-5 shadow-sm overflow-hidden flex items-center justify-center">
               <OrbitCircles
                 dotColor="#23884D"
                 ringColor="#FF7F3E"
-                className="w-72 h-72 absolute inset-0 m-auto opacity-55"
+                className="w-64 h-64 absolute inset-0 m-auto opacity-55"
               />
               <SafeImage
                 src={OFFICIAL_ASSETS.flavourCollection}
                 alt="MAKH AND MORE Flavoured Makhana Collection"
-                className="relative z-10 w-full h-72 sm:h-80 object-contain drop-shadow-md"
+                className="relative z-10 w-full h-full object-contain drop-shadow-md"
               />
             </div>
           </div>
         </div>
 
         {/* 4 Colourful Brand Pillars */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-14">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-7 sm:mb-9">
           {pillars.map((p) => {
             const Icon = p.icon;
             return (
               <div
                 key={p.title}
-                className={`${p.bg} rounded-[1.75rem] border border-[#0D3B2A]/8 p-6 shadow-xs space-y-3`}
+                className={`${p.bg} rounded-[22px] border border-[#0D3B2A]/8 p-4 sm:p-5 shadow-xs space-y-2`}
               >
                 <div
-                  className={`w-12 h-12 rounded-2xl ${p.iconStyle} flex items-center justify-center shadow-xs`}
+                  className={`w-10 h-10 rounded-xl ${p.iconStyle} flex items-center justify-center shadow-xs`}
                 >
-                  <Icon className="w-5 h-5" />
+                  <Icon className="w-4 h-4" />
                 </div>
-                <h2 className="font-display text-lg font-extrabold text-[#0D3B2A]">{p.title}</h2>
-                <p className="text-xs text-[#12261E]/75 leading-relaxed">{p.desc}</p>
+                <h2 className="font-display text-sm sm:text-base font-extrabold text-[#0D3B2A]">{p.title}</h2>
+                <p className="text-[11px] sm:text-xs text-[#12261E]/75 leading-relaxed">{p.desc}</p>
               </div>
             );
           })}
         </div>
 
         {/* Official Business Details Box */}
-        <div className="relative overflow-hidden bg-gradient-to-br from-[#0D3B2A] to-[#195C41] text-[#FFF9EE] rounded-[2.25rem] p-7 sm:p-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 shadow-xl">
+        <div className="relative overflow-hidden bg-gradient-to-br from-[#0D3B2A] to-[#195C41] text-[#FFF9EE] rounded-[26px] p-5 sm:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-xl">
           <div className="absolute inset-0 bg-dots-forest opacity-35 pointer-events-none" />
           <AnimatedSparkle
             color="#B7E843"

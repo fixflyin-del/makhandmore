@@ -183,7 +183,7 @@ export function MiniCartDrawer() {
                       <Link
                         to={`/product/${item.slug}`}
                         onClick={() => setMiniCartOpen(false)}
-                        className={`w-20 h-22 rounded-[18px] ${theme.stageBg} overflow-hidden shrink-0 p-1.5 flex items-center justify-center`}
+                        className={`w-20 h-20 aspect-square rounded-[16px] ${theme.stageBg} overflow-hidden shrink-0 p-1.5 flex items-center justify-center`}
                       >
                         <SafeImage
                           src={item.image}

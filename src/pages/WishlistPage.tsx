@@ -23,18 +23,18 @@ export function WishlistPage() {
   const savedProducts = products.filter((p) => wishlistIds.includes(p.id));
 
   return (
-    <div className="min-h-[75vh] py-6 sm:py-10">
-      <div className="max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-7">
+    <div className="py-3.5 sm:py-6">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 mb-4">
           <div>
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FFE4E1] text-[#F25C54] text-[11px] font-extrabold uppercase tracking-wider mb-2">
-              <Heart className="w-3.5 h-3.5 fill-current" /> Saved Favourites
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#FFE4E1] text-[#F25C54] text-[10px] font-extrabold uppercase tracking-wider mb-1.5">
+              <Heart className="w-3 h-3 fill-current" /> Saved Favourites
             </span>
-            <div className="flex items-center gap-2">
-              <h1 className="font-display text-3xl sm:text-4xl font-extrabold text-[#0D3B2A]">
+            <div className="flex items-center gap-1.5">
+              <h1 className="font-display text-2xl sm:text-3xl font-extrabold text-[#0D3B2A]">
                 Your Crunch Wishlist
               </h1>
-              <AnimatedSparkle className="w-5 h-5" color="#F25C54" />
+              <AnimatedSparkle className="w-4 h-4" color="#F25C54" />
             </div>
           </div>
           <Link
@@ -46,33 +46,33 @@ export function WishlistPage() {
         </div>
 
         {savedProducts.length === 0 ? (
-          <div className="rounded-[34px] bg-gradient-to-br from-[#FFE4E1] via-[#FFF9EE] to-[#FFF1B8] border-2 border-white p-10 sm:p-14 text-center max-w-xl mx-auto shadow-sm bg-dots-coral">
-            <div className="w-18 h-18 rounded-full bg-[#F25C54] text-white flex items-center justify-center mx-auto mb-4 shadow-md">
-              <Heart className="w-8 h-8" />
+          <div className="rounded-[26px] bg-gradient-to-br from-[#FFE4E1] via-[#FFF9EE] to-[#FFF1B8] border-2 border-white p-6 sm:p-10 text-center max-w-xl mx-auto shadow-sm bg-dots-coral">
+            <div className="w-16 h-16 rounded-full bg-[#F25C54] text-white flex items-center justify-center mx-auto mb-3.5 shadow-md">
+              <Heart className="w-7 h-7" />
             </div>
-            <h2 className="font-display text-2xl sm:text-3xl font-extrabold text-[#0D3B2A] mb-2">
+            <h2 className="font-display text-xl sm:text-2xl font-extrabold text-[#0D3B2A] mb-1.5">
               No saved snacks yet!
             </h2>
-            <p className="text-sm text-[#4A5E54] mb-6">
+            <p className="text-xs sm:text-sm text-[#4A5E54] mb-5">
               Tap the heart icon on any MAKH AND MORE jar or jumbo pouch to bookmark it for later —
               no login required.
             </p>
             <Link
               to="/shop"
-              className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-[#0D3B2A] text-[#B7E843] text-sm font-extrabold hover:bg-[#175C41] shadow-md"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#0D3B2A] text-[#B7E843] text-xs sm:text-sm font-extrabold hover:bg-[#175C41] shadow-md"
             >
               Discover Mithila Makhana
               <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
         ) : (
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-5">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
             {savedProducts.map((product) => {
               const theme = getProductTheme(product);
               return (
                 <div
                   key={product.id}
-                  className="bg-white rounded-[28px] p-2.5 sm:p-3 border border-[#0D3B2A]/10 flex flex-col shadow-xs hover:shadow-md transition-shadow"
+                  className="bg-white rounded-[22px] p-2 sm:p-2.5 border border-[#0D3B2A]/10 flex flex-col shadow-xs hover:shadow-md transition-shadow"
                 >
                   <Link
                     to={`/product/${product.slug}`}

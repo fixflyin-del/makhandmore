@@ -118,8 +118,8 @@ export function LoginPage() {
   };
 
   return (
-    <div className="relative bg-[#FFF9EE] bg-dots-light min-h-[78vh] py-10 sm:py-16 px-4 overflow-hidden">
-      <div className="max-w-md mx-auto bg-white rounded-[2.25rem] border-2 border-[#0D3B2A]/10 p-6 sm:p-9 shadow-xl relative">
+    <div className="relative bg-[#FFF9EE] bg-dots-light py-5 sm:py-9 px-3.5 overflow-hidden">
+      <div className="max-w-md mx-auto bg-white rounded-[26px] border-2 border-[#0D3B2A]/10 p-5 sm:p-7 shadow-xl relative">
         <AnimatedSparkle
           color="#F4B926"
           className="w-7 h-7 absolute -top-3 -right-2 pointer-events-none"
@@ -272,8 +272,8 @@ export function RegisterPage() {
   };
 
   return (
-    <div className="relative bg-[#FFF9EE] bg-dots-light min-h-[78vh] py-10 sm:py-16 px-4 overflow-hidden">
-      <div className="max-w-md mx-auto bg-white rounded-[2.25rem] border-2 border-[#0D3B2A]/10 p-6 sm:p-9 shadow-xl relative">
+    <div className="relative bg-[#FFF9EE] bg-dots-light py-5 sm:py-9 px-3.5 overflow-hidden">
+      <div className="max-w-md mx-auto bg-white rounded-[26px] border-2 border-[#0D3B2A]/10 p-5 sm:p-7 shadow-xl relative">
         <AnimatedSparkle
           color="#B7E843"
           className="w-7 h-7 absolute -top-3 -left-2 pointer-events-none"
@@ -521,8 +521,8 @@ export function AccountPage() {
 
   if (!user) {
     return (
-      <div className="bg-[#FFF9EE] bg-dots-light min-h-[75vh] py-14 px-4">
-        <div className="max-w-lg mx-auto bg-white rounded-[2.25rem] border-2 border-[#0D3B2A]/10 p-8 sm:p-10 text-center shadow-lg">
+      <div className="bg-[#FFF9EE] bg-dots-light py-6 sm:py-10 px-3.5">
+        <div className="max-w-lg mx-auto bg-white rounded-[26px] border-2 border-[#0D3B2A]/10 p-6 sm:p-8 text-center shadow-lg">
           <div className="w-16 h-16 rounded-3xl bg-[#EBF9C8] text-[#0D3B2A] flex items-center justify-center mx-auto mb-4">
             <User className="w-8 h-8" />
           </div>
@@ -572,41 +572,41 @@ export function AccountPage() {
   ];
 
   return (
-    <div className="bg-[#FFF9EE] min-h-[75vh] pb-16 sm:pb-24 overflow-hidden">
+    <div className="bg-[#FFF9EE] pb-8 sm:pb-12 overflow-hidden">
       {/* Dotted Forest Account Header Banner */}
       <section className="relative bg-gradient-to-br from-[#0D3B2A] via-[#144E39] to-[#23884D] text-[#FFF9EE] overflow-hidden">
         <div className="absolute inset-0 bg-dots-forest opacity-40 pointer-events-none" />
         <AnimatedDotCluster
           color="#B7E843"
           accentColor="#F4B926"
-          className="w-24 h-24 absolute top-4 right-6 opacity-45 pointer-events-none hidden sm:block"
+          className="w-20 h-20 absolute top-4 right-6 opacity-45 pointer-events-none hidden sm:block"
         />
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-12 sm:pt-10 sm:pb-14">
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <div className="flex items-center gap-4">
-              <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-3xl bg-[#B7E843] text-[#0D3B2A] font-display font-extrabold text-2xl flex items-center justify-center shadow-lg shrink-0">
+        <div className="relative max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8 pt-4 pb-6 sm:pt-7 sm:pb-9">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-[#B7E843] text-[#0D3B2A] font-display font-extrabold text-xl flex items-center justify-center shadow-lg shrink-0">
                 {(profile?.displayName || user.displayName || 'M').slice(0, 1).toUpperCase()}
               </div>
               <div>
-                <span className="inline-flex items-center gap-1 text-[11px] font-bold uppercase tracking-widest text-[#B7E843]">
-                  <Sparkles className="w-3.5 h-3.5" />
+                <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-[#B7E843]">
+                  <Sparkles className="w-3 h-3" />
                   Welcome Back
                 </span>
-                <h1 className="font-display text-2xl sm:text-4xl font-extrabold mt-0.5 leading-tight">
+                <h1 className="font-display text-xl sm:text-3xl font-extrabold mt-0.5 leading-tight">
                   {profile?.displayName || user.displayName || 'Customer Account'}
                 </h1>
                 <p className="text-xs text-[#FFF9EE]/75 mt-0.5">{user.email}</p>
               </div>
             </div>
 
-            <div className="flex flex-wrap items-center gap-2.5">
+            <div className="flex flex-wrap items-center gap-2">
               {isAdmin && (
                 <Link
                   to="/admin"
-                  className="min-h-[42px] px-5 py-2 rounded-full bg-[#F4B926] text-[#0D3B2A] text-xs font-display font-bold hover:bg-[#ffd45a] inline-flex items-center gap-1.5 shadow-sm"
+                  className="h-9 px-4 rounded-full bg-[#F4B926] text-[#0D3B2A] text-xs font-display font-bold hover:bg-[#ffd45a] inline-flex items-center gap-1.5 shadow-sm"
                 >
-                  <Shield className="w-4 h-4" />
+                  <Shield className="w-3.5 h-3.5" />
                   Admin Dashboard
                 </Link>
               )}
@@ -617,9 +617,9 @@ export function AccountPage() {
                   showToast('Signed out successfully.', 'info');
                   navigate('/');
                 }}
-                className="min-h-[42px] px-5 py-2 rounded-full bg-white/10 border border-white/25 text-[#FFF9EE] text-xs font-bold hover:bg-white/20 inline-flex items-center gap-1.5"
+                className="h-9 px-4 rounded-full bg-white/10 border border-white/25 text-[#FFF9EE] text-xs font-bold hover:bg-white/20 inline-flex items-center gap-1.5 cursor-pointer"
               >
-                <LogOut className="w-4 h-4" />
+                <LogOut className="w-3.5 h-3.5" />
                 Sign Out
               </button>
             </div>
@@ -628,9 +628,9 @@ export function AccountPage() {
         <WavySectionDivider fill="#FFF9EE" />
       </section>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+      <div className="max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8 pt-3.5">
         {/* Mobile Scrollable Pill Tab Bar */}
-        <div className="flex lg:hidden items-center gap-2 overflow-x-auto no-scrollbar pb-3 mb-5">
+        <div className="flex lg:hidden items-center gap-2 overflow-x-auto no-scrollbar pb-2 mb-3.5">
           {navItems.map((item) => {
             const Icon = item.icon;
             const active = tab === item.id;

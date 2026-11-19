@@ -81,18 +81,18 @@ export function CartPage() {
   );
 
   return (
-    <div className="min-h-[75vh] py-6 sm:py-10">
-      <div className="max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8">
+    <div className="py-3.5 sm:py-6">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
         {/* Colourful App Header */}
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-7">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 mb-4">
           <div>
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#EBF9C8] text-[#0D3B2A] text-[11px] font-extrabold uppercase tracking-wider mb-2">
-              <ShoppingBag className="w-3.5 h-3.5" /> Snack Bag
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#EBF9C8] text-[#0D3B2A] text-[10px] font-extrabold uppercase tracking-wider mb-1.5">
+              <ShoppingBag className="w-3 h-3" /> Snack Bag
             </span>
-            <h1 className="font-display text-3xl sm:text-4xl font-extrabold text-[#0D3B2A] tracking-tight">
+            <h1 className="font-display text-2xl sm:text-3xl font-extrabold text-[#0D3B2A] tracking-tight">
               Your Mithila Crunch Bag
             </h1>
-            <p className="text-xs sm:text-sm text-[#4A5E54] mt-1 font-medium">
+            <p className="text-xs text-[#4A5E54] mt-0.5 font-medium">
               {cartCount === 0
                 ? 'Your bag is empty — pick some crunchy flavours!'
                 : `${cartCount} ${cartCount === 1 ? 'pack' : 'packs'} freshly queued from Darbhanga.`}
@@ -107,7 +107,7 @@ export function CartPage() {
         </div>
 
         {cart.length === 0 ? (
-          <div className="rounded-[34px] bg-gradient-to-br from-[#EBF9C8] via-[#FFF9EE] to-[#FFF1B8] border-2 border-white p-10 sm:p-14 text-center max-w-2xl mx-auto shadow-md bg-dots-forest">
+          <div className="rounded-[26px] bg-gradient-to-br from-[#EBF9C8] via-[#FFF9EE] to-[#FFF1B8] border-2 border-white p-6 sm:p-10 text-center max-w-2xl mx-auto shadow-md bg-dots-forest">
             <div className="w-20 h-20 rounded-full bg-[#0D3B2A] text-[#B7E843] flex items-center justify-center mx-auto mb-5 shadow-lg">
               <ShoppingBag className="w-9 h-9" />
             </div>
@@ -134,13 +134,13 @@ export function CartPage() {
             </div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-7 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 items-start">
             {/* Left Column: Meters + Flavour-Tinted Item Cards */}
-            <div className="lg:col-span-8 space-y-5">
+            <div className="lg:col-span-8 space-y-3.5">
               {/* Gamified Shipping & Bulk Meters */}
-              <div className="rounded-[28px] bg-gradient-to-r from-[#EBF9C8] via-[#E2F6E7] to-[#FFF1B8] border-2 border-white p-5 grid grid-cols-1 sm:grid-cols-2 gap-4 shadow-xs">
+              <div className="rounded-[22px] bg-gradient-to-r from-[#EBF9C8] via-[#E2F6E7] to-[#FFF1B8] border-2 border-white p-3.5 sm:p-4 grid grid-cols-1 sm:grid-cols-2 gap-3 shadow-xs">
                 <div>
-                  <div className="flex items-center justify-between text-xs font-extrabold text-[#0D3B2A] mb-2">
+                  <div className="flex items-center justify-between text-xs font-extrabold text-[#0D3B2A] mb-1.5">
                     <span className="inline-flex items-center gap-1.5">
                       <Truck className="w-4 h-4 text-[#23884D]" />
                       {freeShippingRemaining === 0
@@ -149,7 +149,7 @@ export function CartPage() {
                     </span>
                     <span className="tabular-nums">{freeShippingProgress}%</span>
                   </div>
-                  <div className="h-2.5 rounded-full bg-white/85 overflow-hidden">
+                  <div className="h-2 rounded-full bg-white/85 overflow-hidden">
                     <motion.div
                       initial={{ width: 0 }}
                       animate={{ width: `${freeShippingProgress}%` }}
@@ -159,7 +159,7 @@ export function CartPage() {
                 </div>
 
                 <div>
-                  <div className="flex items-center justify-between text-xs font-extrabold text-[#0D3B2A] mb-2">
+                  <div className="flex items-center justify-between text-xs font-extrabold text-[#0D3B2A] mb-1.5">
                     <span className="inline-flex items-center gap-1.5">
                       <Gift className="w-4 h-4 text-[#FF7F3E]" />
                       {bulkDiscountRemaining === 0
@@ -168,7 +168,7 @@ export function CartPage() {
                     </span>
                     <span className="tabular-nums">{bulkProgress}%</span>
                   </div>
-                  <div className="h-2.5 rounded-full bg-white/85 overflow-hidden">
+                  <div className="h-2 rounded-full bg-white/85 overflow-hidden">
                     <motion.div
                       initial={{ width: 0 }}
                       animate={{ width: `${bulkProgress}%` }}
@@ -179,7 +179,7 @@ export function CartPage() {
               </div>
 
               {/* Cart Items */}
-              <div className="space-y-3.5">
+              <div className="space-y-3">
                 {cart.map((item) => {
                   const lineTotal = item.salePrice * item.quantity;
                   const lineMrp = item.price * item.quantity;
@@ -191,11 +191,11 @@ export function CartPage() {
                   return (
                     <div
                       key={item.productId}
-                      className="bg-white rounded-[28px] border border-[#0D3B2A]/10 p-4 sm:p-5 flex flex-col sm:flex-row gap-4 sm:items-center shadow-xs"
+                      className="bg-white rounded-[22px] border border-[#0D3B2A]/10 p-3.5 sm:p-4 flex gap-3.5 items-center shadow-xs"
                     >
                       <Link
                         to={`/product/${item.slug}`}
-                        className={`w-24 h-24 sm:w-28 sm:h-28 rounded-[22px] ${theme.stageBg} overflow-hidden shrink-0 flex items-center justify-center p-2.5`}
+                        className={`w-20 h-20 sm:w-24 sm:h-24 aspect-square rounded-[18px] ${theme.stageBg} overflow-hidden shrink-0 flex items-center justify-center p-2`}
                       >
                         <SafeImage
                           src={item.image}
@@ -410,14 +410,14 @@ export function CartPage() {
 
         {/* Recommended Additions */}
         {suggestedProducts.length > 0 && (
-          <section className="mt-14 pt-10 border-t border-[#0D3B2A]/10">
-            <div className="flex items-end justify-between mb-6">
+          <section className="mt-7 pt-6 border-t border-[#0D3B2A]/10">
+            <div className="flex items-end justify-between mb-3.5">
               <div className="flex items-center gap-3">
                 <div>
-                  <span className="inline-flex items-center px-3 py-0.5 rounded-full bg-[#FFF1B8] text-[#0D3B2A] text-[10px] font-extrabold uppercase tracking-wider">
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-[#FFF1B8] text-[#0D3B2A] text-[10px] font-extrabold uppercase tracking-wider">
                     Complete Your Shelf
                   </span>
-                  <h2 className="font-display text-2xl sm:text-3xl font-extrabold text-[#0D3B2A] mt-1">
+                  <h2 className="font-display text-xl sm:text-2xl font-extrabold text-[#0D3B2A] mt-1">
                     Add Another Flavour?
                   </h2>
                 </div>
@@ -434,7 +434,7 @@ export function CartPage() {
                 View All <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-5">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
               {suggestedProducts.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}

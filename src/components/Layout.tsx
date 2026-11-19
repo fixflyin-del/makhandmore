@@ -152,12 +152,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#FFF9EE] text-[#12261E] pb-24 lg:pb-0 relative overflow-x-clip">
+    <div className="min-h-screen flex flex-col bg-[#FFF9EE] text-[#12261E] pb-20 lg:pb-0 relative overflow-x-clip">
       {/* Vibrant Announcement Ribbon */}
-      <div className="bg-[#0D3B2A] text-[#FFF9EE] overflow-hidden h-8 flex items-center relative">
-        <div className="animate-marquee flex items-center gap-10 whitespace-nowrap text-[11px] font-semibold tracking-wide">
+      <div className="bg-[#0D3B2A] text-[#FFF9EE] overflow-hidden h-7 flex items-center relative">
+        <div className="animate-marquee flex items-center gap-8 whitespace-nowrap text-[11px] font-semibold tracking-wide">
           {[...announcements, ...announcements, ...announcements].map((msg, idx) => (
-            <span key={`${idx}-${msg}`} className="inline-flex items-center gap-10">
+            <span key={`${idx}-${msg}`} className="inline-flex items-center gap-8">
               <span className="inline-flex items-center gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#B7E843]" aria-hidden="true" />
                 {msg}
@@ -171,21 +171,21 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </div>
 
       {/* Compact Floating App Header */}
-      <header className="sticky top-2.5 z-40 px-3 sm:px-6 lg:px-8 pointer-events-none">
+      <header className="sticky top-1.5 z-40 px-2.5 sm:px-6 lg:px-8 pointer-events-none">
         <div className="max-w-7xl mx-auto pointer-events-auto">
-          <div className="h-14 lg:h-16 px-3 sm:px-5 rounded-full bg-white/92 backdrop-blur-xl border border-[#0D3B2A]/10 shadow-[0_8px_28px_rgba(13,59,42,0.09)] flex items-center justify-between gap-3 sm:gap-5">
+          <div className="h-12 sm:h-14 lg:h-15 px-2.5 sm:px-4 rounded-full bg-white/94 backdrop-blur-xl border border-[#0D3B2A]/10 shadow-[0_6px_22px_rgba(13,59,42,0.09)] flex items-center justify-between gap-2 sm:gap-4">
             {/* Left: Menu + Brand Logo */}
-            <div className="flex items-center gap-2 shrink-0">
+            <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
               <button
                 type="button"
                 onClick={() => setMobileMenuOpen(true)}
                 aria-label="Open navigation menu"
-                className="lg:hidden w-10 h-10 rounded-full flex items-center justify-center text-[#0D3B2A] bg-[#EBF9C8]/70 hover:bg-[#B7E843] transition-colors cursor-pointer"
+                className="lg:hidden w-9 h-9 rounded-full flex items-center justify-center text-[#0D3B2A] bg-[#EBF9C8]/75 hover:bg-[#B7E843] transition-colors cursor-pointer"
               >
-                <Menu className="w-5 h-5" />
+                <Menu className="w-4 h-4" />
               </button>
               <Link to="/" className="flex items-center shrink-0" aria-label="MAKH AND MORE Home">
-                <BrandLogo variant="light-bg" className="h-8 sm:h-9 lg:h-10" />
+                <BrandLogo variant="light-bg" className="h-7 sm:h-8 lg:h-9" />
               </Link>
             </div>
 
@@ -368,25 +368,25 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <main className="flex-1">{children}</main>
 
       {/* Wavy Transition + Colourful Forest Footer */}
-      <div className="mt-16">
+      <div className="mt-6 sm:mt-10">
         <WavySectionDivider fill="#0D3B2A" />
         <footer className="bg-[#0D3B2A] text-[#FFF9EE] relative overflow-hidden bg-dots-light">
           <OrganicBlob
             fill="#23884D"
             opacity={0.28}
-            className="w-80 h-80 absolute -top-24 -right-24 pointer-events-none"
+            className="w-72 h-72 absolute -top-24 -right-24 pointer-events-none"
           />
           <OrganicBlob
             fill="#F4B926"
             opacity={0.14}
-            className="w-72 h-72 absolute -bottom-24 -left-20 pointer-events-none"
+            className="w-64 h-64 absolute -bottom-24 -left-20 pointer-events-none"
           />
 
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-12 relative z-10">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 pb-12 border-b border-white/15">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-8 relative z-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6 sm:gap-8 pb-7 border-b border-white/15">
               {/* Brand Column */}
-              <div className="lg:col-span-4 space-y-4">
-                <BrandLogo variant="dark-bg" className="h-10" />
+              <div className="lg:col-span-4 space-y-3">
+                <BrandLogo variant="dark-bg" className="h-9" />
                 <p className="text-sm text-[#FFF9EE]/85 leading-relaxed max-w-sm">
                   <strong className="text-[#B7E843]">Healthy Snacking Redefined.</strong> Authentic,
                   farm-fresh Mithila Makhana and slow-roasted flavoured fox nuts crafted with care
@@ -846,15 +846,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
                   >
                     {user ? 'My Account' : 'Sign In / My Account'}
                   </Link>
-                  {isAdmin && (
-                    <Link
-                      to="/admin"
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="block w-full py-3 px-4 rounded-2xl bg-[#FFF1B8] text-[#0D3B2A] text-center text-sm font-extrabold"
-                    >
-                      Admin Dashboard
-                    </Link>
-                  )}
+                  <Link
+                    to="/admin"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block w-full py-2.5 px-4 rounded-2xl bg-[#FFF1B8] text-[#0D3B2A] text-center text-xs font-extrabold"
+                  >
+                    Admin Panel (PIN)
+                  </Link>
                 </div>
               </div>
             </motion.div>

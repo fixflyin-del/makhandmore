@@ -60,38 +60,38 @@ export function BlogListPage() {
   }, [publishedBlogs, searchQuery, selectedCategory]);
 
   return (
-    <div className="bg-[#FFF9EE] min-h-[75vh] pb-16 sm:pb-24 overflow-hidden">
+    <div className="bg-[#FFF9EE] pb-8 sm:pb-12 overflow-hidden">
       {/* Dotted Forest Journal Header */}
       <section className="relative bg-gradient-to-br from-[#0D3B2A] via-[#134F39] to-[#23884D] text-[#FFF9EE] overflow-hidden">
         <div className="absolute inset-0 bg-dots-forest opacity-40 pointer-events-none" />
         <AnimatedDotCluster
           color="#B7E843"
           accentColor="#F4B926"
-          className="w-24 h-24 absolute top-6 right-8 opacity-45 pointer-events-none hidden sm:block"
+          className="w-20 h-20 absolute top-4 right-8 opacity-45 pointer-events-none hidden sm:block"
         />
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-12 sm:pt-12 sm:pb-16">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+        <div className="relative max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8 pt-4 pb-6 sm:pt-7 sm:pb-9">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-3.5">
             <div>
-              <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#B7E843]/15 border border-[#B7E843]/35 text-[#B7E843] text-xs font-bold uppercase tracking-wider">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#B7E843]/15 border border-[#B7E843]/35 text-[#B7E843] text-[11px] font-bold uppercase tracking-wider">
                 <Sparkles className="w-3.5 h-3.5" />
                 The Mithila Journal
               </span>
-              <h1 className="font-display text-3xl sm:text-5xl font-extrabold mt-3 leading-tight">
+              <h1 className="font-display text-2xl sm:text-4xl font-extrabold mt-2 leading-tight">
                 Stories, Craft & <span className="text-[#B7E843]">Wholesome</span> Snacking
               </h1>
-              <p className="text-sm sm:text-base text-[#FFF9EE]/80 mt-2.5 max-w-xl">
+              <p className="text-xs sm:text-sm text-[#FFF9EE]/80 mt-1.5 max-w-xl">
                 From Darbhanga’s harvest ponds to creative ways to enjoy roasted makhana every day.
               </p>
             </div>
 
-            <div className="relative w-full md:w-80">
-              <Search className="w-4 h-4 text-[#0D3B2A]/50 absolute left-4 top-1/2 -translate-y-1/2" />
+            <div className="relative w-full md:w-72">
+              <Search className="w-4 h-4 text-[#0D3B2A]/50 absolute left-3.5 top-1/2 -translate-y-1/2" />
               <input
                 type="search"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search recipes & farm stories…"
-                className="w-full min-h-[46px] pl-11 pr-4 py-2.5 rounded-full bg-white text-[#12261E] placeholder:text-[#4A5E54]/70 text-sm shadow-md focus:outline-none focus:ring-2 focus:ring-[#B7E843]"
+                className="w-full h-10 pl-10 pr-4 rounded-full bg-white text-[#12261E] placeholder:text-[#4A5E54]/70 text-xs sm:text-sm shadow-md focus:outline-none focus:ring-2 focus:ring-[#B7E843]"
               />
             </div>
           </div>
@@ -99,15 +99,15 @@ export function BlogListPage() {
         <WavySectionDivider fill="#FFF9EE" />
       </section>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+      <div className="max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8 pt-3.5">
         {/* Scrollable Category Filter Pills */}
-        <div className="flex items-center gap-2.5 overflow-x-auto no-scrollbar pb-2 mb-8">
+        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1.5 mb-4">
           {categories.map((cat) => (
             <button
               key={cat}
               type="button"
               onClick={() => setSelectedCategory(cat)}
-              className={`min-h-[40px] px-5 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-all ${
+              className={`h-9 px-4 rounded-full text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
                 selectedCategory === cat
                   ? 'bg-[#0D3B2A] text-[#B7E843] shadow-sm'
                   : 'bg-white text-[#0D3B2A] border border-[#0D3B2A]/12 hover:border-[#23884D]'
@@ -119,11 +119,11 @@ export function BlogListPage() {
         </div>
 
         {filtered.length === 0 ? (
-          <div className="bg-white rounded-[2rem] border border-[#0D3B2A]/10 p-12 text-center shadow-xs">
-            <div className="w-14 h-14 rounded-2xl bg-[#FFF1B8] text-[#0D3B2A] flex items-center justify-center mx-auto mb-3">
-              <BookOpen className="w-7 h-7" />
+          <div className="bg-white rounded-[24px] border border-[#0D3B2A]/10 p-8 text-center shadow-xs">
+            <div className="w-12 h-12 rounded-2xl bg-[#FFF1B8] text-[#0D3B2A] flex items-center justify-center mx-auto mb-2.5">
+              <BookOpen className="w-6 h-6" />
             </div>
-            <p className="font-display text-xl font-extrabold text-[#0D3B2A]">
+            <p className="font-display text-lg font-extrabold text-[#0D3B2A]">
               No matching articles found.
             </p>
             <p className="text-xs text-[#4A5E54] mt-1">
@@ -131,17 +131,17 @@ export function BlogListPage() {
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-5">
             {filtered.map((post, idx) => (
               <article
                 key={post.id}
-                className="group bg-white rounded-[2rem] border border-[#0D3B2A]/10 overflow-hidden shadow-xs hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col"
+                className="group bg-white rounded-[24px] border border-[#0D3B2A]/10 overflow-hidden shadow-xs hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 flex flex-col"
               >
                 <Link
                   to={`/blog/${post.slug}`}
-                  className={`block aspect-[16/10] ${CARD_TINTS[idx % CARD_TINTS.length]} overflow-hidden p-3`}
+                  className={`block aspect-square ${CARD_TINTS[idx % CARD_TINTS.length]} overflow-hidden p-2.5`}
                 >
-                  <div className="w-full h-full rounded-[1.25rem] overflow-hidden">
+                  <div className="w-full h-full rounded-[18px] overflow-hidden">
                     <SafeImage
                       src={post.featuredImage}
                       alt={post.title}
@@ -149,25 +149,25 @@ export function BlogListPage() {
                     />
                   </div>
                 </Link>
-                <div className="p-6 flex-1 flex flex-col">
-                  <div className="flex items-center justify-between text-[11px] mb-3">
-                    <span className="px-3 py-1 rounded-full bg-[#EBF9C8] font-extrabold text-[#0D3B2A] uppercase tracking-wider">
+                <div className="p-4 flex-1 flex flex-col">
+                  <div className="flex items-center justify-between text-[11px] mb-2">
+                    <span className="px-2.5 py-0.5 rounded-full bg-[#EBF9C8] font-extrabold text-[#0D3B2A] uppercase tracking-wider">
                       {post.category}
                     </span>
                     <span className="inline-flex items-center gap-1 text-[#4A5E54] font-medium">
-                      <Clock className="w-3.5 h-3.5 text-[#23884D]" />
+                      <Clock className="w-3 h-3 text-[#23884D]" />
                       {post.readTime || '4 min read'}
                     </span>
                   </div>
                   <Link to={`/blog/${post.slug}`}>
-                    <h2 className="font-display text-xl font-extrabold text-[#0D3B2A] group-hover:text-[#23884D] transition-colors leading-snug">
+                    <h2 className="font-display text-base sm:text-lg font-extrabold text-[#0D3B2A] group-hover:text-[#23884D] transition-colors leading-snug line-clamp-2">
                       {post.title}
                     </h2>
                   </Link>
-                  <p className="text-xs text-[#4A5E54] mt-2.5 leading-relaxed line-clamp-3">
+                  <p className="text-xs text-[#4A5E54] mt-1.5 leading-relaxed line-clamp-2">
                     {post.excerpt}
                   </p>
-                  <div className="mt-auto pt-4 flex items-center justify-between text-xs border-t border-[#0D3B2A]/8 mt-5">
+                  <div className="mt-auto pt-3 flex items-center justify-between text-xs border-t border-[#0D3B2A]/8 mt-3">
                     <span className="text-[#4A5E54] font-medium">{post.publishedAt}</span>
                     <Link
                       to={`/blog/${post.slug}`}
@@ -347,29 +347,31 @@ export function BlogDetailPage() {
   };
 
   return (
-    <div className="bg-[#FFF9EE] py-8 sm:py-12 pb-20">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="bg-[#FFF9EE] py-3.5 sm:py-6 pb-10">
+      <div className="max-w-5xl mx-auto px-3.5 sm:px-6 lg:px-8">
         <Link
           to="/blog"
-          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white border border-[#0D3B2A]/10 text-xs font-bold text-[#0D3B2A] hover:bg-[#EBF9C8] transition-colors mb-6 shadow-xs"
+          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white border border-[#0D3B2A]/10 text-xs font-bold text-[#0D3B2A] hover:bg-[#EBF9C8] transition-colors mb-3.5 shadow-xs"
         >
-          <ArrowLeft className="w-4 h-4" />
+          <ArrowLeft className="w-3.5 h-3.5" />
           Back to All Articles
         </Link>
 
-        <article className="bg-white rounded-[2.25rem] border border-[#0D3B2A]/10 overflow-hidden shadow-sm">
-          <div className="aspect-[16/8] bg-[#E2F6E7] overflow-hidden">
-            <SafeImage
-              src={article.featuredImage}
-              alt={article.title}
-              className="w-full h-full object-cover"
-              priority
-            />
+        <article className="bg-white rounded-[26px] border border-[#0D3B2A]/10 overflow-hidden shadow-sm">
+          <div className="bg-[#E2F6E7] p-3.5 sm:p-6 flex items-center justify-center">
+            <div className="w-full max-w-[360px] sm:max-w-[420px] aspect-square rounded-[22px] overflow-hidden shadow-md bg-white">
+              <SafeImage
+                src={article.featuredImage}
+                alt={article.title}
+                className="w-full h-full object-cover"
+                priority
+              />
+            </div>
           </div>
 
-          <div className="p-6 sm:p-10 lg:p-12">
-            <div className="flex flex-wrap items-center gap-3 text-xs text-[#4A5E54] mb-4">
-              <span className="px-3 py-1 rounded-full bg-[#EBF9C8] font-extrabold text-[#0D3B2A] uppercase tracking-wider">
+          <div className="p-4 sm:p-8">
+            <div className="flex flex-wrap items-center gap-2.5 text-xs text-[#4A5E54] mb-3">
+              <span className="px-2.5 py-0.5 rounded-full bg-[#EBF9C8] font-extrabold text-[#0D3B2A] uppercase tracking-wider">
                 {article.category}
               </span>
               <span className="inline-flex items-center gap-1 font-medium">
@@ -386,18 +388,18 @@ export function BlogDetailPage() {
               </span>
             </div>
 
-            <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#0D3B2A] leading-tight">
+            <h1 className="font-display text-2xl sm:text-4xl font-extrabold text-[#0D3B2A] leading-tight">
               {article.title}
             </h1>
-            <p className="text-base text-[#4A5E54] mt-4 leading-relaxed">{article.excerpt}</p>
+            <p className="text-sm sm:text-base text-[#4A5E54] mt-2.5 leading-relaxed">{article.excerpt}</p>
 
             {/* Auto-generated Colourful Table of Contents */}
             {sections.length > 0 && (
-              <div className="my-7 p-5 sm:p-6 rounded-[1.75rem] bg-[#FFF1B8]/70 border border-[#F4B926]/30">
-                <p className="text-xs font-extrabold uppercase tracking-wider text-[#0D3B2A] mb-3">
+              <div className="my-5 p-4 rounded-[20px] bg-[#FFF1B8]/70 border border-[#F4B926]/30">
+                <p className="text-xs font-extrabold uppercase tracking-wider text-[#0D3B2A] mb-2">
                   In This Article
                 </p>
-                <ul className="space-y-2 text-sm">
+                <ul className="space-y-1.5 text-sm">
                   {sections.map((s, idx) => (
                     <li key={s.id} className="flex items-start gap-2">
                       <span className="font-mono text-xs font-bold text-[#B36208] mt-0.5">
@@ -418,12 +420,12 @@ export function BlogDetailPage() {
             <div className="max-w-none">{renderFormattedContent(article.content)}</div>
 
             {/* Share Bar */}
-            <div className="mt-10 pt-6 border-t border-[#0D3B2A]/10 flex flex-wrap items-center justify-between gap-4">
+            <div className="mt-6 pt-4 border-t border-[#0D3B2A]/10 flex flex-wrap items-center justify-between gap-3">
               <div className="flex flex-wrap gap-1.5">
                 {(article.tags || []).map((tag) => (
                   <span
                     key={tag}
-                    className="px-3 py-1 rounded-full bg-[#FFF9EE] border border-[#0D3B2A]/10 text-[11px] font-semibold text-[#4A5E54]"
+                    className="px-2.5 py-0.5 rounded-full bg-[#FFF9EE] border border-[#0D3B2A]/10 text-[11px] font-semibold text-[#4A5E54]"
                   >
                     #{tag}
                   </span>
@@ -433,7 +435,7 @@ export function BlogDetailPage() {
                 <button
                   type="button"
                   onClick={handleCopyShareLink}
-                  className="min-h-[40px] px-4 py-2 rounded-full bg-[#EBF9C8] text-xs font-bold text-[#0D3B2A] hover:bg-[#B7E843] transition-colors inline-flex items-center gap-1.5"
+                  className="h-9 px-3.5 rounded-full bg-[#EBF9C8] text-xs font-bold text-[#0D3B2A] hover:bg-[#B7E843] transition-colors inline-flex items-center gap-1.5 cursor-pointer"
                 >
                   <Share2 className="w-3.5 h-3.5" />
                   Copy Link
@@ -444,7 +446,7 @@ export function BlogDetailPage() {
                   )}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="min-h-[40px] px-4 py-2 rounded-full bg-[#25D366] text-white text-xs font-bold hover:bg-[#1ebe5d] transition-colors inline-flex items-center"
+                  className="h-9 px-3.5 rounded-full bg-[#25D366] text-white text-xs font-bold hover:bg-[#1ebe5d] transition-colors inline-flex items-center"
                 >
                   Share on WhatsApp
                 </a>
@@ -455,9 +457,9 @@ export function BlogDetailPage() {
 
         {/* Related Products */}
         {relatedProducts.length > 0 && (
-          <section className="mt-14">
-            <div className="flex items-center justify-between gap-4 mb-6">
-              <h2 className="font-display text-2xl sm:text-3xl font-extrabold text-[#0D3B2A]">
+          <section className="mt-7">
+            <div className="flex items-center justify-between gap-4 mb-3.5">
+              <h2 className="font-display text-xl sm:text-2xl font-extrabold text-[#0D3B2A]">
                 Featured in This Story
               </h2>
               <CurvedGuideArrow
@@ -466,7 +468,7 @@ export function BlogDetailPage() {
                 className="w-20 h-10 hidden sm:block"
               />
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div className="grid grid-cols-2 gap-2.5 sm:gap-4">
               {relatedProducts.map((p) => (
                 <ProductCard key={p.id} product={p} />
               ))}
@@ -476,18 +478,18 @@ export function BlogDetailPage() {
 
         {/* Related Posts */}
         {relatedPosts.length > 0 && (
-          <section className="mt-14 pt-10 border-t border-[#0D3B2A]/10">
-            <h2 className="font-display text-2xl font-extrabold text-[#0D3B2A] mb-6">
+          <section className="mt-7 pt-6 border-t border-[#0D3B2A]/10">
+            <h2 className="font-display text-xl font-extrabold text-[#0D3B2A] mb-3.5">
               More From The Mithila Journal
             </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
               {relatedPosts.map((rp) => (
                 <Link
                   key={rp.id}
                   to={`/blog/${rp.slug}`}
-                  className="bg-white rounded-[1.75rem] border border-[#0D3B2A]/10 p-4 hover:border-[#23884D] hover:shadow-md transition-all flex gap-4 items-center"
+                  className="bg-white rounded-[22px] border border-[#0D3B2A]/10 p-3 hover:border-[#23884D] hover:shadow-md transition-all flex gap-3 items-center"
                 >
-                  <div className="w-20 h-20 rounded-2xl overflow-hidden shrink-0 bg-[#E2F6E7]">
+                  <div className="w-20 h-20 aspect-square rounded-2xl overflow-hidden shrink-0 bg-[#E2F6E7]">
                     <SafeImage
                       src={rp.featuredImage}
                       alt={rp.title}

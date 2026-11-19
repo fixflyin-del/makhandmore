@@ -126,23 +126,23 @@ export function TrackOrderPage() {
   const whatsappDigits = settings.whatsappNumber.replace(/\D/g, '');
 
   return (
-    <div className="min-h-[75vh] py-8 sm:py-12">
-      <div className="max-w-3xl mx-auto px-3.5 sm:px-6">
-        <div className="relative rounded-[34px] bg-gradient-to-br from-[#0D3B2A] via-[#175C41] to-[#23884D] text-white p-7 sm:p-9 text-center mb-7 overflow-hidden shadow-lg bg-dots-light">
+    <div className="py-3.5 sm:py-6">
+      <div className="max-w-3xl mx-auto px-3 sm:px-6">
+        <div className="relative rounded-[24px] bg-gradient-to-br from-[#0D3B2A] via-[#175C41] to-[#23884D] text-white p-5 sm:p-7 text-center mb-4 overflow-hidden shadow-lg bg-dots-light">
           <OrganicBlob
             fill="#B7E843"
             opacity={0.22}
-            className="w-56 h-56 absolute -top-20 -right-12 pointer-events-none"
+            className="w-48 h-48 absolute -top-20 -right-12 pointer-events-none"
           />
-          <AnimatedSparkle className="w-6 h-6 absolute top-5 left-7" color="#F4B926" />
+          <AnimatedSparkle className="w-5 h-5 absolute top-4 left-5" color="#F4B926" />
           <div className="relative z-10">
-            <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#B7E843]/20 text-[#B7E843] text-xs font-extrabold">
+            <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-[#B7E843]/20 text-[#B7E843] text-[11px] font-extrabold">
               <Truck className="w-3.5 h-3.5" /> Live Dispatch Tracker
             </span>
-            <h1 className="font-display text-3xl sm:text-4xl font-extrabold mt-2">
+            <h1 className="font-display text-2xl sm:text-3xl font-extrabold mt-1.5">
               Track Your Crunch
             </h1>
-            <p className="text-xs sm:text-sm text-[#FFF9EE]/85 mt-2 max-w-md mx-auto">
+            <p className="text-xs sm:text-sm text-[#FFF9EE]/85 mt-1 max-w-md mx-auto">
               Enter your MAKH AND MORE Order Number to check packing, courier, and delivery status.
             </p>
           </div>
@@ -151,7 +151,7 @@ export function TrackOrderPage() {
         {/* Search Card */}
         <form
           onSubmit={handleSubmit}
-          className="bg-white rounded-[30px] border-2 border-[#0D3B2A]/10 p-6 sm:p-8 shadow-sm"
+          className="bg-white rounded-[24px] border-2 border-[#0D3B2A]/10 p-4 sm:p-6 shadow-sm"
         >
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="sm:col-span-2">

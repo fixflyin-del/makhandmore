@@ -104,20 +104,20 @@ export function ContactPage() {
   const whatsappDigits = settings.whatsappNumber.replace(/\D/g, '');
 
   return (
-    <div className="bg-[#FFF9EE] pb-16 sm:pb-24 overflow-hidden">
+    <div className="bg-[#FFF9EE] pb-8 sm:pb-12 overflow-hidden">
       {/* Dotted Forest App Banner */}
       <section className="relative bg-gradient-to-br from-[#0D3B2A] via-[#134E38] to-[#1F6F49] text-[#FFF9EE] overflow-hidden">
         <div className="absolute inset-0 bg-dots-forest opacity-40 pointer-events-none" />
         <AnimatedDotCluster
           color="#B7E843"
           accentColor="#F4B926"
-          className="w-24 h-24 absolute top-6 right-8 opacity-45 pointer-events-none hidden sm:block"
+          className="w-20 h-20 absolute top-4 right-8 opacity-45 pointer-events-none hidden sm:block"
         />
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-12 sm:pt-12 sm:pb-16">
+        <div className="relative max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8 pt-4 pb-6 sm:pt-7 sm:pb-9">
           <nav
             aria-label="Breadcrumb"
-            className="text-xs text-[#FFF9EE]/70 mb-4 flex items-center gap-2 font-medium"
+            className="text-xs text-[#FFF9EE]/70 mb-2 flex items-center gap-2 font-medium"
           >
             <Link to="/" className="hover:text-[#B7E843] transition-colors">
               Home
@@ -126,16 +126,16 @@ export function ContactPage() {
             <span className="text-[#B7E843] font-bold">Contact Us</span>
           </nav>
 
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-3">
             <div className="max-w-2xl">
-              <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#B7E843]/15 border border-[#B7E843]/35 text-[#B7E843] text-xs font-bold uppercase tracking-wider">
+              <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-[#B7E843]/15 border border-[#B7E843]/35 text-[#B7E843] text-[11px] font-bold uppercase tracking-wider">
                 <Sparkles className="w-3.5 h-3.5" />
                 We’re Here to Help
               </span>
-              <h1 className="font-display text-3xl sm:text-5xl font-extrabold mt-3 leading-tight">
+              <h1 className="font-display text-2xl sm:text-4xl font-extrabold mt-2 leading-tight">
                 Connect With <span className="text-[#B7E843]">MAKH AND MORE</span>
               </h1>
-              <p className="text-sm sm:text-base text-[#FFF9EE]/80 mt-3 leading-relaxed">
+              <p className="text-xs sm:text-sm text-[#FFF9EE]/80 mt-1.5 leading-relaxed">
                 Have a question about your order, bulk corporate gifting, or wholesale Mithila
                 Makhana supply? Reach our Darbhanga support team directly.
               </p>
@@ -143,15 +143,15 @@ export function ContactPage() {
             <CurvedGuideArrow
               direction="down-right"
               color="#F4B926"
-              className="w-24 h-16 hidden md:block shrink-0"
+              className="w-20 h-12 hidden md:block shrink-0"
             />
           </div>
         </div>
         <WavySectionDivider fill="#FFF9EE" />
       </section>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-7 items-start">
+      <div className="max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8 pt-4 sm:pt-6">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 items-start">
           {/* Contact Details Cards */}
           <div className="lg:col-span-5 space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3.5">

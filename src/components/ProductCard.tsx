@@ -50,11 +50,11 @@ export function ProductCard({
     return (
       <motion.article
         whileHover={{ y: -2 }}
-        className="group bg-white rounded-[26px] p-3 border border-[#0D3B2A]/8 shadow-[0_6px_22px_rgba(13,59,42,0.06)] hover:shadow-[0_12px_30px_rgba(13,59,42,0.12)] transition-all flex items-center gap-3.5"
+        className="group bg-white rounded-[22px] p-2.5 border border-[#0D3B2A]/8 shadow-[0_4px_16px_rgba(13,59,42,0.06)] hover:shadow-[0_10px_24px_rgba(13,59,42,0.12)] transition-all flex items-center gap-3"
       >
         <Link
           to={`/product/${product.slug}`}
-          className={`relative w-24 h-24 sm:w-28 sm:h-28 rounded-[20px] ${theme.stageBg} overflow-hidden shrink-0 flex items-center justify-center p-2`}
+          className={`relative w-20 h-20 sm:w-24 sm:h-24 aspect-square rounded-[16px] ${theme.stageBg} overflow-hidden shrink-0 flex items-center justify-center p-1.5`}
         >
           <OrbitCircles
             dotColor={theme.dotColor}
@@ -144,19 +144,19 @@ export function ProductCard({
   if (variant === 'featured') {
     return (
       <motion.article
-        whileHover={{ y: -4 }}
+        whileHover={{ y: -3 }}
         transition={{ duration: 0.2 }}
-        className={`group relative rounded-[32px] ${theme.stageBg} border border-[#0D3B2A]/10 p-5 sm:p-7 flex flex-col justify-between overflow-hidden shadow-[0_12px_36px_rgba(13,59,42,0.1)] h-full`}
+        className={`group relative rounded-[26px] ${theme.stageBg} border border-[#0D3B2A]/10 p-3.5 sm:p-5 flex flex-col justify-between overflow-hidden shadow-[0_10px_28px_rgba(13,59,42,0.09)] h-full`}
       >
-        <div className="flex items-center justify-between gap-2 relative z-20 mb-3">
-          <div className="flex items-center gap-2">
+        <div className="flex items-center justify-between gap-2 relative z-20 mb-2">
+          <div className="flex items-center gap-1.5">
             <span
-              className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-[11px] font-extrabold ${theme.badgeBg} ${theme.badgeText}`}
+              className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-extrabold ${theme.badgeBg} ${theme.badgeText}`}
             >
               <Sparkles className="w-3 h-3" /> Fan Favourite
             </span>
             {discountPct > 0 && (
-              <span className="px-2.5 py-1 rounded-full bg-[#F25C54] text-white text-[11px] font-extrabold tabular-nums">
+              <span className="px-2 py-1 rounded-full bg-[#F25C54] text-white text-[10px] font-extrabold tabular-nums">
                 Save {discountPct}%
               </span>
             )}
@@ -167,7 +167,7 @@ export function ProductCard({
               type="button"
               onClick={handleQuickView}
               aria-label={`Quick view ${product.name}`}
-              className="w-10 h-10 rounded-full bg-white/90 text-[#0D3B2A] hover:bg-white flex items-center justify-center shadow-sm cursor-pointer"
+              className="w-9 h-9 rounded-full bg-white/90 text-[#0D3B2A] hover:bg-white flex items-center justify-center shadow-sm cursor-pointer"
             >
               <Eye className="w-4 h-4" />
             </button>
@@ -175,7 +175,7 @@ export function ProductCard({
               type="button"
               onClick={handleWishlist}
               aria-label={wishlisted ? 'Remove from wishlist' : 'Save to wishlist'}
-              className={`w-10 h-10 rounded-full flex items-center justify-center shadow-sm transition-colors cursor-pointer ${
+              className={`w-9 h-9 rounded-full flex items-center justify-center shadow-sm transition-colors cursor-pointer ${
                 wishlisted ? 'bg-[#F25C54] text-white' : 'bg-white/90 text-[#0D3B2A] hover:bg-white'
               }`}
             >
@@ -186,26 +186,26 @@ export function ProductCard({
 
         <Link
           to={`/product/${product.slug}`}
-          className="relative flex-1 min-h-[210px] sm:min-h-[250px] flex items-center justify-center my-2"
+          className="relative w-full max-w-[230px] sm:max-w-[260px] aspect-square mx-auto flex items-center justify-center my-1"
         >
           <OrbitCircles
             dotColor={theme.dotColor}
             ringColor={theme.ringColor}
-            className="absolute inset-0 w-full h-full max-w-[270px] mx-auto animate-spin-slow"
+            className="absolute inset-0 w-full h-full animate-spin-slow"
           />
-          <div className="relative z-10 w-52 h-52 sm:w-64 sm:h-64 transition-transform duration-500 ease-out group-hover:scale-108">
+          <div className="relative z-10 w-[86%] h-[86%] aspect-square transition-transform duration-500 ease-out group-hover:scale-105">
             <SafeImage
               src={product.primaryImage}
               alt={product.name}
               imageCrop={product.imageCrop}
               width={640}
-              className="w-full h-full object-contain drop-shadow-[0_18px_22px_rgba(13,59,42,0.18)]"
+              className="w-full h-full object-contain drop-shadow-[0_14px_18px_rgba(13,59,42,0.16)]"
             />
           </div>
         </Link>
 
-        <div className="relative z-20 bg-white/94 backdrop-blur-md rounded-[24px] p-4 sm:p-5 border border-white shadow-sm mt-3">
-          <div className="flex items-center justify-between gap-2 text-xs font-bold text-[#4A5E54] mb-1">
+        <div className="relative z-20 bg-white/95 backdrop-blur-md rounded-[20px] p-3.5 sm:p-4 border border-white shadow-sm mt-2">
+          <div className="flex items-center justify-between gap-2 text-[11px] font-bold text-[#4A5E54] mb-1">
             <span>{product.weight}</span>
             {product.reviewCount && product.reviewCount > 0 ? (
               <span className="inline-flex items-center gap-1 text-[#0D3B2A] tabular-nums">
@@ -219,11 +219,11 @@ export function ProductCard({
 
           <Link
             to={`/product/${product.slug}`}
-            className="font-display text-lg sm:text-xl font-extrabold text-[#0D3B2A] leading-snug line-clamp-2 block mb-1.5"
+            className="font-display text-base sm:text-lg font-extrabold text-[#0D3B2A] leading-snug line-clamp-2 block mb-1"
           >
             {product.name}
           </Link>
-          <p className="text-xs text-[#4A5E54] line-clamp-2 mb-3.5">{product.shortDescription}</p>
+          <p className="text-xs text-[#4A5E54] line-clamp-2 mb-2.5">{product.shortDescription}</p>
 
           <div className="flex items-center justify-between gap-3">
             <div className="flex items-baseline gap-2 tabular-nums">
@@ -262,87 +262,87 @@ export function ProductCard({
     );
   }
 
-  // Standard Colourful Modern App Card
+  // Standard Colourful Modern App Card (1:1 Square Image)
   return (
     <motion.article
-      whileHover={{ y: -4 }}
+      whileHover={{ y: -3 }}
       transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
-      className="group bg-white rounded-[28px] p-2.5 sm:p-3 border border-[#0D3B2A]/8 shadow-[0_8px_26px_rgba(13,59,42,0.06)] hover:shadow-[0_14px_34px_rgba(13,59,42,0.12)] transition-all flex flex-col h-full"
+      className="group bg-white rounded-[22px] sm:rounded-[24px] p-2 sm:p-2.5 border border-[#0D3B2A]/8 shadow-[0_6px_20px_rgba(13,59,42,0.06)] hover:shadow-[0_12px_28px_rgba(13,59,42,0.12)] transition-all flex flex-col h-full"
     >
-      {/* Colourful Product Stage */}
+      {/* Colourful 1:1 Square Product Stage */}
       <Link
         to={`/product/${product.slug}`}
-        className={`relative aspect-[4/4.3] rounded-[22px] ${theme.stageBg} overflow-hidden flex items-center justify-center p-4`}
+        className={`relative aspect-square rounded-[16px] sm:rounded-[18px] ${theme.stageBg} overflow-hidden flex items-center justify-center p-2.5 sm:p-3.5`}
       >
         <OrbitCircles
           dotColor={theme.dotColor}
           ringColor={theme.ringColor}
-          className="absolute inset-0 w-full h-full opacity-80 group-hover:scale-105 transition-transform duration-500"
+          className="absolute inset-0 w-full h-full opacity-75 group-hover:scale-105 transition-transform duration-500"
         />
 
-        <div className="relative z-10 w-full h-full transition-transform duration-500 ease-out group-hover:scale-108">
+        <div className="relative z-10 w-full h-full transition-transform duration-500 ease-out group-hover:scale-105">
           <SafeImage
             src={product.primaryImage}
             alt={product.name}
             imageCrop={product.imageCrop}
             width={520}
-            className="w-full h-full object-contain drop-shadow-[0_12px_16px_rgba(13,59,42,0.15)]"
+            className="w-full h-full object-contain drop-shadow-[0_10px_14px_rgba(13,59,42,0.14)]"
           />
         </div>
 
         {/* Floating Discount Tag */}
         {discountPct > 0 && (
-          <span className="absolute top-2.5 left-2.5 z-20 px-2.5 py-1 rounded-full bg-[#F25C54] text-white text-[10px] font-extrabold tracking-wide shadow-sm tabular-nums">
+          <span className="absolute top-2 left-2 z-20 px-2 py-0.5 rounded-full bg-[#F25C54] text-white text-[10px] font-extrabold tracking-wide shadow-sm tabular-nums">
             -{discountPct}%
           </span>
         )}
 
         {/* Wishlist & Quick View Buttons */}
-        <div className="absolute top-2.5 right-2.5 z-20 flex flex-col gap-1.5">
+        <div className="absolute top-2 right-2 z-20 flex flex-col gap-1">
           <button
             type="button"
             onClick={handleWishlist}
             aria-label={wishlisted ? 'Remove from wishlist' : 'Save to wishlist'}
-            className={`w-9 h-9 rounded-full flex items-center justify-center shadow-sm transition-all cursor-pointer ${
+            className={`w-8 h-8 rounded-full flex items-center justify-center shadow-sm transition-all cursor-pointer ${
               wishlisted
                 ? 'bg-[#F25C54] text-white scale-105'
                 : 'bg-white/90 text-[#0D3B2A] hover:bg-white'
             }`}
           >
-            <Heart className={`w-4 h-4 ${wishlisted ? 'fill-current' : ''}`} />
+            <Heart className={`w-3.5 h-3.5 ${wishlisted ? 'fill-current' : ''}`} />
           </button>
           <button
             type="button"
             onClick={handleQuickView}
             aria-label={`Quick view ${product.name}`}
-            className="w-9 h-9 rounded-full bg-white/90 text-[#0D3B2A] hover:bg-[#B7E843] flex items-center justify-center shadow-sm transition-all cursor-pointer sm:opacity-0 sm:group-hover:opacity-100"
+            className="w-8 h-8 rounded-full bg-white/90 text-[#0D3B2A] hover:bg-[#B7E843] flex items-center justify-center shadow-sm transition-all cursor-pointer sm:opacity-0 sm:group-hover:opacity-100"
           >
-            <Eye className="w-4 h-4" />
+            <Eye className="w-3.5 h-3.5" />
           </button>
         </div>
 
         {/* Bottom Flavour / Weight Pill inside Stage */}
-        <span className="absolute bottom-2.5 left-2.5 z-20 px-2.5 py-0.5 rounded-full bg-white/88 backdrop-blur-xs text-[10px] font-bold text-[#0D3B2A]">
+        <span className="absolute bottom-2 left-2 z-20 px-2 py-0.5 rounded-full bg-white/90 backdrop-blur-xs text-[10px] font-bold text-[#0D3B2A]">
           {product.weight}
         </span>
 
         {product.stock <= 0 && (
           <div className="absolute inset-0 z-30 bg-[#FFF9EE]/75 backdrop-blur-[1px] flex items-center justify-center">
-            <span className="text-xs font-extrabold text-[#0D3B2A] bg-white border border-[#0D3B2A]/15 px-3.5 py-1.5 rounded-full shadow-sm">
+            <span className="text-xs font-extrabold text-[#0D3B2A] bg-white border border-[#0D3B2A]/15 px-3 py-1 rounded-full shadow-sm">
               Sold Out
             </span>
           </div>
         )}
       </Link>
 
-      {/* Card Body */}
-      <div className="px-1.5 pt-3 pb-1 flex flex-col flex-1">
-        <div className="flex items-center justify-between gap-2 mb-1">
-          <span className={`text-[11px] font-extrabold truncate ${theme.accentText}`}>
+      {/* Compact Card Body */}
+      <div className="px-1 pt-2 pb-0.5 flex flex-col flex-1">
+        <div className="flex items-center justify-between gap-1.5 mb-0.5">
+          <span className={`text-[10px] font-extrabold truncate ${theme.accentText}`}>
             {product.flavour || 'Mithila Harvest'}
           </span>
           {product.reviewCount && product.reviewCount > 0 ? (
-            <span className="inline-flex items-center gap-0.5 text-[11px] font-bold text-[#0D3B2A] tabular-nums shrink-0">
+            <span className="inline-flex items-center gap-0.5 text-[10px] font-bold text-[#0D3B2A] tabular-nums shrink-0">
               <Star className="w-3 h-3 fill-[#F4B926] text-[#F4B926]" />
               {(product.rating || 0).toFixed(1)}
             </span>
@@ -351,18 +351,18 @@ export function ProductCard({
 
         <Link
           to={`/product/${product.slug}`}
-          className="font-display text-sm sm:text-base font-bold text-[#0D3B2A] group-hover:text-[#23884D] leading-snug line-clamp-2 mb-3 transition-colors"
+          className="font-display text-[13px] sm:text-[15px] font-bold text-[#0D3B2A] group-hover:text-[#23884D] leading-snug line-clamp-2 mb-2 transition-colors"
         >
           {product.name}
         </Link>
 
-        <div className="mt-auto flex items-center justify-between gap-2 pt-2 border-t border-[#0D3B2A]/6">
+        <div className="mt-auto flex items-center justify-between gap-1.5 pt-1.5 border-t border-[#0D3B2A]/6">
           <div className="flex flex-col leading-none tabular-nums">
-            <span className="text-base sm:text-lg font-extrabold text-[#0D3B2A]">
+            <span className="text-sm sm:text-base font-extrabold text-[#0D3B2A]">
               ₹{product.salePrice}
             </span>
             {product.price > product.salePrice && (
-              <span className="text-[11px] text-[#4A5E54] line-through mt-0.5">
+              <span className="text-[10px] text-[#4A5E54] line-through mt-0.5">
                 ₹{product.price}
               </span>
             )}
@@ -373,7 +373,7 @@ export function ProductCard({
             whileTap={{ scale: 0.92 }}
             disabled={product.stock <= 0}
             onClick={handleQuickAdd}
-            className={`h-10 px-3.5 sm:px-4 rounded-full text-xs font-extrabold inline-flex items-center gap-1 transition-all whitespace-nowrap shrink-0 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${
+            className={`h-8 sm:h-9 px-2.5 sm:px-3.5 rounded-full text-[11px] sm:text-xs font-extrabold inline-flex items-center gap-1 transition-all whitespace-nowrap shrink-0 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${
               justAdded
                 ? 'bg-[#23884D] text-white'
                 : 'bg-[#0D3B2A] text-[#B7E843] hover:bg-[#175C41]'
@@ -381,11 +381,11 @@ export function ProductCard({
           >
             {justAdded ? (
               <>
-                <Check className="w-3.5 h-3.5" /> Added
+                <Check className="w-3 h-3" /> Added
               </>
             ) : (
               <>
-                <Plus className="w-3.5 h-3.5 stroke-[3]" /> Add
+                <Plus className="w-3 h-3 stroke-[3]" /> Add
               </>
             )}
           </motion.button>

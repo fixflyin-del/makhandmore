@@ -66,35 +66,35 @@ export function QuickViewModal() {
 
             {/* Colourful Product Stage */}
             <div
-              className={`${theme.stageBg} relative min-h-[250px] md:min-h-full flex items-center justify-center p-8 pt-10 md:pt-8 overflow-hidden`}
+              className={`${theme.stageBg} relative flex items-center justify-center p-5 pt-8 md:p-6 overflow-hidden`}
             >
               <OrbitCircles
                 dotColor={theme.dotColor}
                 ringColor={theme.ringColor}
-                className="absolute inset-0 w-full h-full max-w-[290px] mx-auto animate-spin-slow"
+                className="absolute inset-0 w-full h-full max-w-[240px] mx-auto animate-spin-slow"
               />
               <AnimatedSparkle
-                className="w-6 h-6 absolute top-8 left-7"
+                className="w-5 h-5 absolute top-6 left-6"
                 color="#F4B926"
               />
               {discountPct > 0 && (
-                <span className="absolute bottom-4 left-4 z-20 px-3 py-1 rounded-full bg-[#F25C54] text-white text-xs font-extrabold tabular-nums shadow-sm">
+                <span className="absolute bottom-3 left-3 z-20 px-2.5 py-0.5 rounded-full bg-[#F25C54] text-white text-[11px] font-extrabold tabular-nums shadow-sm">
                   Save {discountPct}%
                 </span>
               )}
-              <div className="relative z-10 w-48 h-48 sm:w-60 sm:h-60 animate-float">
+              <div className="relative z-10 w-44 h-44 sm:w-56 sm:h-56 aspect-square animate-float">
                 <SafeImage
                   src={product.primaryImage}
                   alt={product.name}
                   imageCrop={product.imageCrop}
                   width={640}
-                  className="w-full h-full object-contain drop-shadow-[0_18px_24px_rgba(13,59,42,0.18)]"
+                  className="w-full h-full object-contain drop-shadow-[0_14px_20px_rgba(13,59,42,0.18)]"
                 />
               </div>
             </div>
 
             {/* Product Details & Touch Actions */}
-            <div className="p-6 sm:p-7 flex flex-col">
+            <div className="p-4 sm:p-6 flex flex-col">
               <div className="flex items-center gap-2 mb-2">
                 <span
                   className={`px-2.5 py-0.5 rounded-full text-[11px] font-extrabold ${theme.badgeBg} ${theme.badgeText}`}

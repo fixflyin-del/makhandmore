@@ -377,11 +377,11 @@ export function ProductDetailPage() {
   ];
 
   return (
-    <div className="max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8 py-4 sm:py-8 pb-28 lg:pb-16">
+    <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-3 sm:py-5 pb-24 lg:pb-10">
       {/* Desktop Breadcrumb */}
       <nav
         aria-label="Breadcrumb"
-        className="hidden sm:flex flex-wrap items-center gap-1.5 text-xs font-bold text-[#4A5E54] mb-5"
+        className="hidden sm:flex flex-wrap items-center gap-1.5 text-xs font-bold text-[#4A5E54] mb-3.5"
       >
         <Link to="/" className="hover:text-[#0D3B2A]">
           Home
@@ -395,9 +395,9 @@ export function ProductDetailPage() {
       </nav>
 
       {/* Main Immersive Product Split */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-7 lg:gap-12 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-8 items-start">
         {/* Left: Colourful Product Stage & Carousel */}
-        <div className="lg:col-span-6 lg:sticky lg:top-24 space-y-4">
+        <div className="lg:col-span-6 lg:sticky lg:top-20 space-y-2.5">
           <div
             onMouseEnter={() => setZoomActive(true)}
             onMouseLeave={() => setZoomActive(false)}
@@ -407,7 +407,7 @@ export function ProductDetailPage() {
               const y = ((e.clientY - rect.top) / rect.height) * 100;
               setZoomOrigin({ x, y });
             }}
-            className={`relative aspect-square rounded-[34px] ${theme.stageBg} border-2 border-white shadow-[0_18px_42px_rgba(13,59,42,0.12)] overflow-hidden cursor-zoom-in flex items-center justify-center p-6 sm:p-10`}
+            className={`relative aspect-square rounded-[26px] ${theme.stageBg} border-2 border-white shadow-[0_14px_32px_rgba(13,59,42,0.11)] overflow-hidden cursor-zoom-in flex items-center justify-center p-4 sm:p-7`}
           >
             <OrbitCircles
               dotColor={theme.dotColor}
@@ -526,27 +526,27 @@ export function ProductDetailPage() {
         </div>
 
         {/* Right: App Purchase Sheet & Selectors */}
-        <div className="lg:col-span-6 space-y-5">
+        <div className="lg:col-span-6 space-y-3.5">
           {/* Title & Badges */}
-          <div className="space-y-3">
-            <div className="flex flex-wrap items-center gap-2">
+          <div className="space-y-2">
+            <div className="flex flex-wrap items-center gap-1.5">
               <span
-                className={`px-3 py-1 rounded-full text-xs font-extrabold ${theme.badgeBg} ${theme.badgeText}`}
+                className={`px-2.5 py-0.5 rounded-full text-[11px] font-extrabold ${theme.badgeBg} ${theme.badgeText}`}
               >
                 {product.weight}
               </span>
-              <span className="px-3 py-1 rounded-full bg-[#EBF9C8] text-[#0D3B2A] text-xs font-extrabold">
+              <span className="px-2.5 py-0.5 rounded-full bg-[#EBF9C8] text-[#0D3B2A] text-[11px] font-extrabold">
                 {product.stock > 0 ? `In Stock (${product.stock})` : 'Sold Out'}
               </span>
-              <span className="text-xs font-mono text-[#4A5E54] ml-auto">SKU: {product.sku}</span>
+              <span className="text-[11px] font-mono text-[#4A5E54] ml-auto">SKU: {product.sku}</span>
             </div>
 
-            <h1 className="font-display text-3xl sm:text-4xl font-extrabold text-[#0D3B2A] leading-tight">
+            <h1 className="font-display text-2xl sm:text-3xl font-extrabold text-[#0D3B2A] leading-tight">
               {product.name}
             </h1>
 
             {productReviews.length > 0 && (
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FFF1B8] text-xs font-extrabold text-[#0D3B2A]">
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#FFF1B8] text-xs font-extrabold text-[#0D3B2A]">
                 <Star className="w-3.5 h-3.5 fill-[#F4B926] text-[#F4B926]" />
                 <span className="tabular-nums">{avgRating.toFixed(1)}</span>
                 <span className="text-[#4A5E54] font-semibold">
@@ -555,31 +555,31 @@ export function ProductDetailPage() {
               </div>
             )}
 
-            <p className="text-sm sm:text-base text-[#4A5E54] leading-relaxed">
+            <p className="text-xs sm:text-sm text-[#4A5E54] leading-relaxed">
               {product.shortDescription}
             </p>
           </div>
 
           {/* Interactive Flavour Selector (for 90g Flavoured Jars) */}
           {isSingleFlavourJar && (
-            <div className="p-4 rounded-[26px] bg-white border border-[#0D3B2A]/10 space-y-2.5">
-              <p className="text-xs font-extrabold uppercase tracking-wider text-[#23884D]">
+            <div className="p-3.5 rounded-[22px] bg-white border border-[#0D3B2A]/10 space-y-2">
+              <p className="text-[11px] font-extrabold uppercase tracking-wider text-[#23884D]">
                 Switch Flavour (90g Jar)
               </p>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-1.5">
                 {FLAVOUR_VARIANTS.map((fv) => {
                   const active = fv.slug === product.slug;
                   return (
                     <Link
                       key={fv.slug}
                       to={`/product/${fv.slug}`}
-                      className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-extrabold transition-all ${
+                      className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-extrabold transition-all ${
                         active
-                          ? 'bg-[#0D3B2A] text-[#B7E843] shadow-md'
+                          ? 'bg-[#0D3B2A] text-[#B7E843] shadow-sm'
                           : 'bg-[#FFF9EE] text-[#0D3B2A] border border-[#0D3B2A]/10 hover:border-[#23884D]'
                       }`}
                     >
-                      <span className={`w-3 h-3 rounded-full ${fv.swatch}`} />
+                      <span className={`w-2.5 h-2.5 rounded-full ${fv.swatch}`} />
                       {fv.label}
                     </Link>
                   );
@@ -590,20 +590,20 @@ export function ProductDetailPage() {
 
           {/* Interactive Weight Selector (for Jumbo Makhana Pouches) */}
           {isJumboPouch && (
-            <div className="p-4 rounded-[26px] bg-white border border-[#0D3B2A]/10 space-y-2.5">
-              <p className="text-xs font-extrabold uppercase tracking-wider text-[#23884D]">
+            <div className="p-3.5 rounded-[22px] bg-white border border-[#0D3B2A]/10 space-y-2">
+              <p className="text-[11px] font-extrabold uppercase tracking-wider text-[#23884D]">
                 Select Pack Size
               </p>
-              <div className="flex flex-wrap gap-2.5">
+              <div className="flex flex-wrap gap-2">
                 {JUMBO_WEIGHT_VARIANTS.map((wv) => {
                   const active = wv.slug === product.slug;
                   return (
                     <Link
                       key={wv.slug}
                       to={`/product/${wv.slug}`}
-                      className={`px-5 py-2.5 rounded-full text-xs font-extrabold transition-all ${
+                      className={`px-4 py-2 rounded-full text-xs font-extrabold transition-all ${
                         active
-                          ? 'bg-[#0D3B2A] text-[#B7E843] shadow-md'
+                          ? 'bg-[#0D3B2A] text-[#B7E843] shadow-sm'
                           : 'bg-[#FFF9EE] text-[#0D3B2A] border border-[#0D3B2A]/12 hover:border-[#23884D]'
                       }`}
                     >
@@ -616,9 +616,9 @@ export function ProductDetailPage() {
           )}
 
           {/* Colourful Pricing & Purchase Card */}
-          <div className="p-5 sm:p-6 rounded-[30px] bg-white border-2 border-[#0D3B2A]/10 shadow-sm space-y-4">
-            <div className="flex flex-wrap items-baseline gap-3 tabular-nums">
-              <span className="text-3xl sm:text-4xl font-extrabold text-[#0D3B2A]">
+          <div className="p-4 sm:p-5 rounded-[24px] bg-white border-2 border-[#0D3B2A]/10 shadow-sm space-y-3">
+            <div className="flex flex-wrap items-baseline gap-2.5 tabular-nums">
+              <span className="text-2xl sm:text-3xl font-extrabold text-[#0D3B2A]">
                 ₹{product.salePrice}
               </span>
               {product.price > product.salePrice && (
@@ -807,9 +807,9 @@ export function ProductDetailPage() {
       </div>
 
       {/* Verified Customer Reviews & Submission */}
-      <section className="mt-14 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        <div className="lg:col-span-7 space-y-4">
-          <h2 className="font-display text-2xl sm:text-3xl font-extrabold text-[#0D3B2A]">
+      <section className="mt-7 sm:mt-10 grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 items-start">
+        <div className="lg:col-span-7 space-y-3">
+          <h2 className="font-display text-xl sm:text-2xl font-extrabold text-[#0D3B2A]">
             Customer Reviews ({productReviews.length})
           </h2>
           {productReviews.length === 0 ? (
@@ -929,11 +929,11 @@ export function ProductDetailPage() {
       </section>
 
       {/* Related Products */}
-      <section className="mt-14">
-        <h2 className="font-display text-2xl sm:text-3xl font-extrabold text-[#0D3B2A] mb-6">
+      <section className="mt-7 sm:mt-10">
+        <h2 className="font-display text-xl sm:text-2xl font-extrabold text-[#0D3B2A] mb-3.5">
           Pair It With These Crunchies
         </h2>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-5">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
           {relatedProducts.map((p) => (
             <ProductCard key={p.id} product={p} />
           ))}
@@ -942,11 +942,11 @@ export function ProductDetailPage() {
 
       {/* Recently Viewed Products */}
       {recentlyViewedProducts.length > 0 && (
-        <section className="mt-14">
-          <h2 className="font-display text-2xl font-extrabold text-[#0D3B2A] mb-6">
+        <section className="mt-7 sm:mt-10">
+          <h2 className="font-display text-xl sm:text-2xl font-extrabold text-[#0D3B2A] mb-3.5">
             Recently Viewed
           </h2>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-5">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
             {recentlyViewedProducts.map((p) => (
               <ProductCard key={p.id} product={p} />
             ))}

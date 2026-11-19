@@ -45,33 +45,33 @@ export function FaqPage() {
   const whatsappDigits = settings.whatsappNumber.replace(/\D/g, '');
 
   return (
-    <div className="bg-[#FFF9EE] min-h-[75vh] pb-16 sm:pb-24 overflow-hidden">
+    <div className="bg-[#FFF9EE] pb-8 sm:pb-12 overflow-hidden">
       {/* Dotted Forest FAQ Banner */}
       <section className="relative bg-gradient-to-br from-[#0D3B2A] via-[#134E38] to-[#23884D] text-[#FFF9EE] overflow-hidden">
         <div className="absolute inset-0 bg-dots-forest opacity-40 pointer-events-none" />
         <AnimatedDotCluster
           color="#B7E843"
           accentColor="#F4B926"
-          className="w-24 h-24 absolute top-6 right-8 opacity-45 pointer-events-none hidden sm:block"
+          className="w-20 h-20 absolute top-4 right-8 opacity-45 pointer-events-none hidden sm:block"
         />
 
-        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 pt-8 pb-12 sm:pt-12 sm:pb-16 text-center">
-          <span className="inline-flex items-center gap-1.5 px-4 py-1 rounded-full bg-[#B7E843]/15 border border-[#B7E843]/35 text-[#B7E843] text-xs font-bold uppercase tracking-wider">
+        <div className="relative max-w-4xl mx-auto px-3.5 sm:px-6 pt-4 pb-6 sm:pt-7 sm:pb-9 text-center">
+          <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-[#B7E843]/15 border border-[#B7E843]/35 text-[#B7E843] text-[11px] font-bold uppercase tracking-wider">
             <HelpCircle className="w-3.5 h-3.5" />
             Help Center
           </span>
-          <h1 className="font-display text-3xl sm:text-5xl font-extrabold mt-3 leading-tight">
+          <h1 className="font-display text-2xl sm:text-4xl font-extrabold mt-2 leading-tight">
             Frequently Asked <span className="text-[#B7E843]">Questions</span>
           </h1>
-          <p className="text-sm sm:text-base text-[#FFF9EE]/80 mt-2.5 max-w-xl mx-auto">
+          <p className="text-xs sm:text-sm text-[#FFF9EE]/80 mt-1.5 max-w-xl mx-auto">
             Everything you need to know about our Mithila Makhana harvest, delivery, and policies.
           </p>
         </div>
         <WavySectionDivider fill="#FFF9EE" />
       </section>
 
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 pt-6 sm:pt-10">
-        <div className="space-y-3.5">
+      <div className="max-w-3xl mx-auto px-3.5 sm:px-6 pt-4 sm:pt-6">
+        <div className="space-y-2.5">
           {GENERAL_FAQS.map((faq, idx) => {
             const isOpen = openIndex === idx;
             const dotColor = FAQ_ACCENT_DOTS[idx % FAQ_ACCENT_DOTS.length];
@@ -188,13 +188,13 @@ export function PolicyPage({ policyKey, title, canonicalPath, description }: Pol
   const content = settings.policies?.[policyKey] || '';
 
   return (
-    <div className="bg-[#FFF9EE] min-h-[75vh] pb-16 sm:pb-24 overflow-hidden">
+    <div className="bg-[#FFF9EE] pb-8 sm:pb-12 overflow-hidden">
       <section className="relative bg-gradient-to-br from-[#0D3B2A] to-[#1A5E42] text-[#FFF9EE] overflow-hidden">
         <div className="absolute inset-0 bg-dots-forest opacity-35 pointer-events-none" />
-        <div className="relative max-w-3xl mx-auto px-4 sm:px-6 pt-8 pb-12 sm:pt-10 sm:pb-14">
+        <div className="relative max-w-3xl mx-auto px-3.5 sm:px-6 pt-4 pb-6 sm:pt-7 sm:pb-9">
           <nav
             aria-label="Breadcrumb"
-            className="text-xs text-[#FFF9EE]/70 mb-4 flex items-center gap-2 font-medium"
+            className="text-xs text-[#FFF9EE]/70 mb-2 flex items-center gap-2 font-medium"
           >
             <Link to="/" className="hover:text-[#B7E843]">
               Home
@@ -202,17 +202,17 @@ export function PolicyPage({ policyKey, title, canonicalPath, description }: Pol
             <span>/</span>
             <span className="text-[#B7E843] font-bold">{title}</span>
           </nav>
-          <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#B7E843]/15 border border-[#B7E843]/35 text-[#B7E843] text-[11px] font-bold uppercase tracking-wider">
+          <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-[#B7E843]/15 border border-[#B7E843]/35 text-[#B7E843] text-[10px] font-bold uppercase tracking-wider">
             <ShieldCheck className="w-3.5 h-3.5" />
             ASR ENTERPRISES · Official Store Policy
           </span>
-          <h1 className="font-display text-3xl sm:text-4xl font-extrabold mt-3">{title}</h1>
+          <h1 className="font-display text-2xl sm:text-3xl font-extrabold mt-2">{title}</h1>
         </div>
         <WavySectionDivider fill="#FFF9EE" />
       </section>
 
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 pt-6">
-        <div className="bg-white rounded-[2.25rem] border border-[#0D3B2A]/10 p-6 sm:p-10 shadow-sm">
+      <div className="max-w-3xl mx-auto px-3.5 sm:px-6 pt-4">
+        <div className="bg-white rounded-[24px] border border-[#0D3B2A]/10 p-4 sm:p-7 shadow-sm">
           <div className="space-y-4 text-sm sm:text-base text-[#12261E]/85 leading-relaxed whitespace-pre-line">
             {content}
           </div>
