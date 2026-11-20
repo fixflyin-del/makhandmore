@@ -186,20 +186,20 @@ export function ProductCard({
 
         <Link
           to={`/product/${product.slug}`}
-          className="relative w-full max-w-[230px] sm:max-w-[260px] aspect-square mx-auto flex items-center justify-center my-1"
+          className="relative w-full max-w-[230px] sm:max-w-[260px] aspect-square mx-auto flex items-center justify-center my-1.5"
         >
           <OrbitCircles
             dotColor={theme.dotColor}
             ringColor={theme.ringColor}
             className="absolute inset-0 w-full h-full animate-spin-slow"
           />
-          <div className="relative z-10 w-[86%] h-[86%] aspect-square transition-transform duration-500 ease-out group-hover:scale-105">
+          <div className="relative z-10 w-[86%] h-[86%] aspect-square rounded-[24px] bg-white p-2.5 sm:p-3 shadow-[0_14px_28px_rgba(13,59,42,0.13)] border-2 border-white overflow-hidden flex items-center justify-center transition-transform duration-500 ease-out group-hover:scale-105">
             <SafeImage
               src={product.primaryImage}
               alt={product.name}
               imageCrop={product.imageCrop}
               width={640}
-              className="w-full h-full object-contain drop-shadow-[0_14px_18px_rgba(13,59,42,0.16)]"
+              className="w-full h-full object-contain"
             />
           </div>
         </Link>
@@ -213,7 +213,9 @@ export function ProductCard({
                 {(product.rating || 0).toFixed(1)} ({product.reviewCount})
               </span>
             ) : (
-              <span className="text-[#23884D]">100% Roasted</span>
+              <span className="text-[#23884D]">
+                {product.category === 'makhana' ? '100% Natural' : '100% Roasted'}
+              </span>
             )}
           </div>
 

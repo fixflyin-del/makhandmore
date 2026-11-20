@@ -197,18 +197,30 @@ export function HomePage() {
     },
   });
 
-  useEffect(() => {
-    if (banners.length <= 1) return;
-    const timer = setInterval(() => {
-      setActiveSlide((prev) => (prev + 1) % banners.length);
-    }, 6500);
-    return () => clearInterval(timer);
-  }, [banners.length]);
+  const heroBanners = banners.slice(0, 2);
 
-  const currentBanner = banners[activeSlide] || banners[0];
-  const comboProduct =
-    products.find((p) => p.slug === 'roasted-makhana-combo-4-flavours') || products[0];
-  const otherProducts = products.filter((p) => p.id !== comboProduct?.id);
+  useEffect(() => {
+    if (heroBanners.length <= 1) return;
+    const timer = setInterval(() => {
+      setActiveSlide((prev) => (prev + 1) % heroBanners.length);
+    }, 6000);
+    return () => clearInterval(timer);
+  }, [heroBanners.length]);
+
+  const safeSlide = heroBanners.length > 0 ? activeSlide % heroBanners.length : 0;
+  const currentBanner = heroBanners[safeSlide] || heroBanners[0];
+  const primaryCtaLabel =
+    currentBanner?.ctaText && currentBanner.ctaText.length <= 14
+      ? currentBanner.ctaText
+      : safeSlide === 1
+        ? 'Shop Combo'
+        : 'Shop Now';
+
+  const mainSpotlightProduct =
+    products.find((p) => p.slug === 'premium-jumbo-makhana-100g') ||
+    products.find((p) => p.primaryImage === OFFICIAL_ASSETS.jumboPouch) ||
+    products[0];
+  const otherProducts = products.filter((p) => p.id !== mainSpotlightProduct?.id);
   const activeMood = FLAVOUR_MOODS.find((f) => f.id === selectedFlavourId) || FLAVOUR_MOODS[0];
   const activeMoodProduct =
     products.find((p) => p.slug === activeMood.slug) ||
@@ -307,46 +319,50 @@ export function HomePage() {
           />
 
           <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6 items-center p-4 sm:p-7 lg:p-8">
-            {/* Hero Copy */}
+            {/* Hero Copy (Fixed Height Stage = 0px Vertical Jump on Mobile Slide Change) */}
             <div className="lg:col-span-7 space-y-3 sm:space-y-4">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={currentBanner?.id || 'hero-copy'}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -8 }}
-                  transition={{ duration: 0.3 }}
-                  className="space-y-2 sm:space-y-3"
-                >
-                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#B7E843]/20 border border-[#B7E843]/45 text-[#B7E843] text-[11px] font-extrabold tracking-wide">
-                    <Sparkles className="w-3 h-3" />
-                    <span>{currentBanner?.eyebrow || 'Healthy Snacking Redefined'}</span>
-                  </div>
+              <div className="h-[144px] sm:h-[172px] lg:h-[196px] flex flex-col justify-center overflow-hidden">
+                <AnimatePresence mode="wait" initial={false}>
+                  <motion.div
+                    key={currentBanner?.id || `hero-copy-${safeSlide}`}
+                    initial={{ opacity: 0, x: 10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -10 }}
+                    transition={{ duration: 0.24, ease: 'easeOut' }}
+                    className="space-y-2 sm:space-y-2.5"
+                  >
+                    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#B7E843]/20 border border-[#B7E843]/45 text-[#B7E843] text-[11px] font-extrabold tracking-wide max-w-full">
+                      <Sparkles className="w-3 h-3 shrink-0" />
+                      <span className="truncate">
+                        {currentBanner?.eyebrow || 'Healthy Snacking Redefined'}
+                      </span>
+                    </div>
 
-                  <h1 className="font-display text-2xl sm:text-4xl lg:text-[3rem] font-extrabold leading-[1.06] tracking-tight text-white drop-shadow-xs">
-                    {currentBanner?.title || 'Pure. Natural. Delicious.'}
-                  </h1>
+                    <h1 className="font-display text-[25px] sm:text-4xl lg:text-[2.85rem] font-extrabold leading-[1.08] tracking-tight text-white drop-shadow-xs line-clamp-2">
+                      {currentBanner?.title || 'Pure. Natural. Delicious.'}
+                    </h1>
 
-                  <p className="text-xs sm:text-sm lg:text-base text-[#FFF9EE]/92 leading-relaxed max-w-lg">
-                    {currentBanner?.subtitle ||
-                      'Wholesome Mithila Makhana snacks crafted with care in Darbhanga. Roasted, never fried — bursting with real Indian flavours.'}
-                  </p>
-                </motion.div>
-              </AnimatePresence>
+                    <p className="text-xs sm:text-sm lg:text-base text-[#FFF9EE]/92 leading-snug sm:leading-relaxed max-w-lg line-clamp-2">
+                      {currentBanner?.subtitle ||
+                        'Handpicked Mithila Makhana crafted with care. Roasted, never fried — bursting with real Indian flavours.'}
+                    </p>
+                  </motion.div>
+                </AnimatePresence>
+              </div>
 
-              {/* CTA Row + Hand-Drawn Curved Guide Arrow */}
-              <div className="flex flex-wrap items-center gap-2.5 relative">
+              {/* Single-Row Compact CTA Bar (Never Wraps Across Slides on Mobile) */}
+              <div className="flex flex-nowrap items-center gap-2 sm:gap-2.5 relative">
                 <Link
                   to={currentBanner?.ctaLink || '/shop'}
-                  className="inline-flex items-center gap-1.5 h-11 px-5 sm:px-6 rounded-full bg-[#B7E843] text-[#0D3B2A] text-xs sm:text-sm font-extrabold hover:bg-[#cbf65e] transition-all shadow-md whitespace-nowrap"
+                  className="inline-flex items-center justify-center gap-1.5 h-10 sm:h-11 px-4 sm:px-6 rounded-full bg-[#B7E843] text-[#0D3B2A] text-xs sm:text-sm font-extrabold hover:bg-[#cbf65e] transition-all shadow-md whitespace-nowrap shrink-0"
                 >
-                  {currentBanner?.ctaText || 'SHOP NOW'}
-                  <ArrowRight className="w-4 h-4 stroke-[2.5]" />
+                  <span>{primaryCtaLabel}</span>
+                  <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 stroke-[2.5] shrink-0" />
                 </Link>
 
                 <Link
                   to="/category/makhana-combo"
-                  className="inline-flex items-center gap-1.5 h-11 px-4 sm:px-5 rounded-full bg-white/15 hover:bg-white/25 backdrop-blur-xs border border-white/35 text-white text-xs sm:text-sm font-bold transition-colors whitespace-nowrap"
+                  className="inline-flex items-center justify-center gap-1.5 h-10 sm:h-11 px-3.5 sm:px-5 rounded-full bg-white/15 hover:bg-white/25 backdrop-blur-xs border border-white/35 text-white text-xs sm:text-sm font-bold transition-colors whitespace-nowrap shrink-0"
                 >
                   4-Flavour Combo
                 </Link>
@@ -358,31 +374,33 @@ export function HomePage() {
                 />
               </div>
 
-              {/* Compact Offer Perks & Slide Dots */}
-              <div className="pt-2.5 flex flex-wrap items-center justify-between gap-2.5 border-t border-white/20">
-                <div className="flex flex-wrap items-center gap-x-2.5 gap-y-0.5 text-[11px] sm:text-xs font-semibold text-[#FFF9EE]/92">
-                  <span className="text-[#F4B926] font-bold">
+              {/* Compact Offer Perks & 2-Slide Controls */}
+              <div className="pt-2.5 flex items-center justify-between gap-2 border-t border-white/20">
+                <div className="flex items-center gap-x-2 text-[11px] sm:text-xs font-semibold text-[#FFF9EE]/92 truncate">
+                  <span className="text-[#F4B926] font-bold shrink-0">
                     Free Shipping ₹{settings.freeShippingThreshold}+
                   </span>
                   <span aria-hidden="true">•</span>
-                  <span>
+                  <span className="truncate">
                     {settings.bulkDiscountPercent || 20}% OFF on ₹
                     {settings.bulkDiscountThreshold || 599}+
                   </span>
                 </div>
 
-                {banners.length > 1 && (
-                  <div className="flex items-center gap-1.5">
-                    {banners.map((b, index) => (
+                {heroBanners.length > 1 && (
+                  <div className="flex items-center gap-1.5 shrink-0" role="tablist" aria-label="Hero slides">
+                    {heroBanners.map((b, index) => (
                       <button
                         key={b.id}
                         type="button"
+                        role="tab"
+                        aria-selected={safeSlide === index}
                         onClick={() => setActiveSlide(index)}
                         aria-label={`Slide ${index + 1}: ${b.title}`}
                         className={`h-2 rounded-full transition-all cursor-pointer ${
-                          activeSlide === index
+                          safeSlide === index
                             ? 'w-7 bg-[#B7E843]'
-                            : 'w-2 bg-white/45 hover:bg-white/75'
+                            : 'w-2.5 bg-white/45 hover:bg-white/75'
                         }`}
                       />
                     ))}
@@ -391,9 +409,9 @@ export function HomePage() {
               </div>
             </div>
 
-            {/* 1:1 Square Hero Visual Stage */}
+            {/* Locked 1:1 Square Hero Visual Stage (Zero Height Shift) */}
             <div className="lg:col-span-5 relative flex items-center justify-center">
-              <div className="relative w-full max-w-[230px] sm:max-w-[300px] lg:max-w-[340px]">
+              <div className="relative w-[216px] h-[216px] sm:w-[290px] sm:h-[290px] lg:w-[330px] lg:h-[330px] aspect-square shrink-0">
                 <OrbitCircles
                   dotColor="#F4B926"
                   ringColor="#B7E843"
@@ -420,28 +438,30 @@ export function HomePage() {
                   </div>
                 </div>
 
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={currentBanner?.image || 'hero-img'}
-                    initial={{ opacity: 0, scale: 0.94, y: 8 }}
-                    animate={{ opacity: 1, scale: 1, y: 0 }}
-                    exit={{ opacity: 0, scale: 0.95 }}
-                    transition={{ duration: 0.35 }}
-                    className="relative z-10 rounded-[24px] overflow-hidden bg-white/95 border-[3px] border-white/30 shadow-2xl aspect-square animate-float"
-                  >
-                    <SafeImage
-                      src={currentBanner?.image || OFFICIAL_ASSETS.heroSnacks}
-                      alt={currentBanner?.title || 'MAKH AND MORE Premium Mithila Makhana'}
-                      priority
-                      width={900}
-                      className={`w-full h-full ${
-                        currentBanner?.image === OFFICIAL_ASSETS.flavourCollection
-                          ? 'object-contain bg-gradient-to-br from-[#FFF9EE] to-[#EBF9C8] p-3'
-                          : 'object-cover'
-                      }`}
-                    />
-                  </motion.div>
-                </AnimatePresence>
+                <div className="relative z-10 w-full h-full rounded-[24px] overflow-hidden bg-white/95 border-[3px] border-white/30 shadow-2xl aspect-square">
+                  <AnimatePresence mode="wait" initial={false}>
+                    <motion.div
+                      key={currentBanner?.image || `hero-img-${safeSlide}`}
+                      initial={{ opacity: 0, scale: 0.96 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.96 }}
+                      transition={{ duration: 0.28, ease: 'easeOut' }}
+                      className="w-full h-full"
+                    >
+                      <SafeImage
+                        src={currentBanner?.image || OFFICIAL_ASSETS.heroSnacks}
+                        alt={currentBanner?.title || 'MAKH AND MORE Premium Mithila Makhana'}
+                        priority
+                        width={900}
+                        className={`w-full h-full ${
+                          currentBanner?.image === OFFICIAL_ASSETS.flavourCollection
+                            ? 'object-contain bg-gradient-to-br from-[#FFF9EE] to-[#EBF9C8] p-3'
+                            : 'object-cover'
+                        }`}
+                      />
+                    </motion.div>
+                  </AnimatePresence>
+                </div>
               </div>
             </div>
           </div>
@@ -532,11 +552,11 @@ export function HomePage() {
             </div>
           </div>
 
-          {/* Asymmetrical Bento Layout: Big Featured Card Left + 4 Colourful Square Cards Right */}
+          {/* Asymmetrical Bento Layout: Big Featured Jumbo Makhana Card + 4 Colourful Square Cards */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-4 items-stretch">
-            {comboProduct && (
+            {mainSpotlightProduct && (
               <div className="lg:col-span-5">
-                <ProductCard product={comboProduct} variant="featured" />
+                <ProductCard product={mainSpotlightProduct} variant="featured" />
               </div>
             )}
 

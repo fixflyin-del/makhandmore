@@ -559,14 +559,14 @@ export const INITIAL_PRODUCTS: Product[] = [
 export const INITIAL_BANNERS: HeroBanner[] = [
   {
     id: 'banner-1',
-    eyebrow: 'Authentic Mithila Harvest · Darbhanga, Bihar',
+    eyebrow: 'Authentic Mithila Harvest · Darbhanga',
     title: 'Pure. Natural. Delicious.',
     subtitle:
-      'Wholesome Makhana snacks crafted with care. Premium Mithila Makhana, thoughtfully selected and hygienically packed.',
+      'Handpicked Mithila Makhana crafted with care. Roasted, never fried — bursting with crisp flavour.',
     ctaText: 'Shop Now',
     ctaLink: '/shop',
-    secondaryCtaText: 'Explore Our Story',
-    secondaryCtaLink: '/our-story',
+    secondaryCtaText: '4-Flavour Combo',
+    secondaryCtaLink: '/category/makhana-combo',
     image: OFFICIAL_ASSETS.heroSnacks,
     order: 1,
     active: true,
@@ -574,29 +574,15 @@ export const INITIAL_BANNERS: HeroBanner[] = [
   {
     id: 'banner-2',
     eyebrow: 'Roasted. Flavoured. Makhana.',
-    title: 'Not Just Makhana, It’s a Flavour Experience.',
+    title: 'Bold Crunch, Real Flavour.',
     subtitle:
-      'Discover four bold slow-roasted jars — Cheese, Pudina, Himalayan Salt, and Peri Peri. Crunch without the fry.',
-    ctaText: 'Shop 4-Flavour Combo',
+      'Discover four slow-roasted jars — Cheese, Pudina, Himalayan Salt & Peri Peri. Crunch without the fry.',
+    ctaText: 'Shop Combo',
     ctaLink: '/product/roasted-makhana-combo-4-flavours',
-    secondaryCtaText: 'View All Flavours',
+    secondaryCtaText: 'All Flavours',
     secondaryCtaLink: '/category/flavoured-makhana',
     image: OFFICIAL_ASSETS.flavourCollection,
     order: 2,
-    active: true,
-  },
-  {
-    id: 'banner-3',
-    eyebrow: 'Direct Farm Sourcing · ASR Enterprises',
-    title: 'From Mithila Farms to Your Home.',
-    subtitle:
-      'Partnering directly with skilled makhana farmers in Darbhanga’s wetlands to bring pure, unpolished fox nuts to Indian kitchens.',
-    ctaText: 'Discover Our Story',
-    ctaLink: '/our-story',
-    secondaryCtaText: 'Shop Jumbo Makhana',
-    secondaryCtaLink: '/category/makhana',
-    image: OFFICIAL_ASSETS.farmer,
-    order: 3,
     active: true,
   },
 ];
