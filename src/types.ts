@@ -275,3 +275,13 @@ export interface WhatsAppSession {
   verificationToken: string;
   verifiedAt: number;
 }
+
+export interface WhatsAppProfile {
+  phone: string;
+  fullName: string;
+  addressLine: string;
+  city: string;
+  state: string;
+  pincode: string;
+  updatedAt: string;
+}

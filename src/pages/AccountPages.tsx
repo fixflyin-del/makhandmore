@@ -418,6 +418,10 @@ export function AccountPage() {
     isAdmin,
     loading,
     whatsappSession,
+    whatsappProfile,
+    whatsappOrders,
+    setWhatsappSession,
+    saveWhatsappProfile,
     logout,
     updateUserProfile,
     saveAddress,
@@ -430,7 +434,21 @@ export function AccountPage() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loadingOrders, setLoadingOrders] = useState(false);
 
-  // Profile form
+  // WhatsApp Profile quick edit & login state
+  const [waPhoneInput, setWaPhoneInput] = useState('');
+  const [waStep, setWaStep] = useState<'phone' | 'otp'>('phone');
+  const [waOtpInput, setWaOtpInput] = useState('');
+  const [waInstantCode, setWaInstantCode] = useState<string | null>(null);
+  const [waBusy, setWaBusy] = useState(false);
+  const [waError, setWaError] = useState('');
+
+  const [waNameEdit, setWaNameEdit] = useState(whatsappProfile?.fullName || '');
+  const [waAddrEdit, setWaAddrEdit] = useState(whatsappProfile?.addressLine || '');
+  const [waPinEdit, setWaPinEdit] = useState(whatsappProfile?.pincode || '');
+  const [waCityEdit, setWaCityEdit] = useState(whatsappProfile?.city || '');
+  const [waStateEdit, setWaStateEdit] = useState(whatsappProfile?.state || '');
+
+  // Profile form (Firebase)
   const [displayName, setDisplayName] = useState('');
   const [phone, setPhone] = useState('');
   const [whatsappNumber, setWhatsappNumber] = useState('');
@@ -456,11 +474,21 @@ export function AccountPage() {
   const [pwFeedback, setPwFeedback] = useState('');
 
   useSEO({
-    title: 'My Account | MAKH AND MORE',
-    description: 'Manage your MAKH AND MORE profile, saved addresses, and order history.',
+    title: 'My Profile | MAKH AND MORE',
+    description: 'Manage your MAKH AND MORE profile, saved address, and orders.',
     canonicalPath: '/account',
     noindex: true,
   });
+
+  useEffect(() => {
+    if (whatsappProfile) {
+      setWaNameEdit(whatsappProfile.fullName || '');
+      setWaAddrEdit(whatsappProfile.addressLine || '');
+      setWaPinEdit(whatsappProfile.pincode || '');
+      setWaCityEdit(whatsappProfile.city || '');
+      setWaStateEdit(whatsappProfile.state || '');
+    }
+  }, [whatsappProfile]);
 
   useEffect(() => {
     if (profile) {
@@ -519,35 +547,302 @@ export function AccountPage() {
     );
   }
 
-  if (!user) {
+  // WhatsApp-logged-in Profile View (no Google login required!)
+  if (!user && whatsappSession?.verified) {
     return (
-      <div className="bg-[#FFF9EE] bg-dots-light py-6 sm:py-10 px-3.5">
-        <div className="max-w-lg mx-auto bg-white rounded-[26px] border-2 border-[#0D3B2A]/10 p-6 sm:p-8 text-center shadow-lg">
-          <div className="w-16 h-16 rounded-3xl bg-[#EBF9C8] text-[#0D3B2A] flex items-center justify-center mx-auto mb-4">
-            <User className="w-8 h-8" />
-          </div>
-          <h1 className="font-display text-2xl sm:text-3xl font-extrabold text-[#0D3B2A] mb-2">
-            Your MAKH AND MORE Account
-          </h1>
-          <p className="text-sm text-[#4A5E54] mb-6 leading-relaxed">
-            {whatsappSession?.verified
-              ? `Your WhatsApp (${whatsappSession.phone}) is verified for express checkout! Sign in with Google or Email to view synced multi-device order history.`
-              : 'Sign in to access saved addresses and past orders — or use Track Order with your Order Number anytime.'}
-          </p>
-          <div className="flex flex-wrap justify-center gap-3">
-            <Link
-              to="/login"
-              className="min-h-[46px] px-7 py-3 rounded-full bg-[#0D3B2A] text-[#B7E843] text-sm font-display font-bold hover:bg-[#175C41] inline-flex items-center"
+      <div className="max-w-3xl mx-auto px-3.5 sm:px-6 py-4 sm:py-7 space-y-4">
+        <div className="relative rounded-[24px] bg-[#0D3B2A] bg-gradient-to-br from-[#0D3B2A] via-[#15573D] to-[#23884D] text-white p-5 overflow-hidden shadow-md">
+          <div className="absolute inset-0 bg-dots-light pointer-events-none" />
+          <div className="relative z-10 flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-2xl bg-[#B7E843] text-[#0D3B2A] font-display font-extrabold text-xl flex items-center justify-center shrink-0">
+                {(whatsappProfile?.fullName || 'M').slice(0, 1).toUpperCase()}
+              </div>
+              <div>
+                <p className="text-[10px] font-extrabold uppercase tracking-wider text-[#B7E843]">
+                  Verified WhatsApp Profile
+                </p>
+                <h1 className="font-display text-xl font-extrabold text-white">
+                  {whatsappProfile?.fullName || 'MAKH AND MORE Member'}
+                </h1>
+                <p className="text-xs text-[#FFF9EE]/80 tabular-nums">{whatsappSession.phone}</p>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={async () => {
+                await logout();
+                showToast('Signed out.', 'info');
+                navigate('/');
+              }}
+              className="h-9 px-3.5 rounded-full bg-white/15 border border-white/25 text-white text-xs font-extrabold inline-flex items-center gap-1.5 cursor-pointer"
             >
-              Sign In / Register
-            </Link>
-            <Link
-              to="/track-order"
-              className="min-h-[46px] px-7 py-3 rounded-full bg-[#FFF1B8] text-[#0D3B2A] text-sm font-bold hover:bg-[#F4B926] transition-colors inline-flex items-center"
-            >
-              Track an Order
-            </Link>
+              <LogOut className="w-3.5 h-3.5" />
+              Logout
+            </button>
           </div>
+        </div>
+
+        {/* Quick Shortcuts */}
+        <div className="grid grid-cols-2 gap-2.5">
+          <Link
+            to="/my-orders"
+            className="bg-white rounded-2xl border border-[#0D3B2A]/10 p-3.5 flex items-center gap-3 shadow-xs hover:border-[#23884D]"
+          >
+            <span className="w-10 h-10 rounded-xl bg-[#EBF9C8] text-[#0D3B2A] flex items-center justify-center shrink-0">
+              <Package className="w-5 h-5" />
+            </span>
+            <div>
+              <p className="font-display text-sm font-extrabold text-[#0D3B2A]">My Orders</p>
+              <p className="text-[11px] text-[#4A5E54]">{whatsappOrders.length} saved order(s)</p>
+            </div>
+          </Link>
+          <Link
+            to="/wishlist"
+            className="bg-white rounded-2xl border border-[#0D3B2A]/10 p-3.5 flex items-center gap-3 shadow-xs hover:border-[#F25C54]"
+          >
+            <span className="w-10 h-10 rounded-xl bg-[#FFE4E1] text-[#F25C54] flex items-center justify-center shrink-0">
+              <Heart className="w-5 h-5" />
+            </span>
+            <div>
+              <p className="font-display text-sm font-extrabold text-[#0D3B2A]">Wishlist</p>
+              <p className="text-[11px] text-[#4A5E54]">{wishlistIds.length} saved item(s)</p>
+            </div>
+          </Link>
+        </div>
+
+        {/* Saved Profile Details Form */}
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            saveWhatsappProfile({
+              phone: whatsappSession.phone,
+              fullName: waNameEdit,
+              addressLine: waAddrEdit,
+              pincode: waPinEdit,
+              city: waCityEdit,
+              state: waStateEdit,
+            });
+            showToast('Profile details saved permanently!');
+          }}
+          className="bg-white rounded-[24px] border-2 border-[#0D3B2A]/10 p-4 sm:p-6 shadow-xs space-y-3"
+        >
+          <h2 className="font-display text-lg font-extrabold text-[#0D3B2A]">
+            Saved Checkout Profile
+          </h2>
+
+          <div>
+            <label className="block text-xs font-extrabold text-[#0D3B2A] mb-1">Full Name</label>
+            <input
+              type="text"
+              value={waNameEdit}
+              onChange={(e) => setWaNameEdit(e.target.value)}
+              placeholder="Your name"
+              className="w-full h-11 px-3.5 rounded-2xl border border-[#0D3B2A]/15 bg-[#FFF9EE]/50 text-sm font-semibold focus:outline-none focus:border-[#0D3B2A]"
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-extrabold text-[#0D3B2A] mb-1">
+              Single-Line Delivery Address
+            </label>
+            <input
+              type="text"
+              value={waAddrEdit}
+              onChange={(e) => setWaAddrEdit(e.target.value)}
+              placeholder="House No., Street, Area"
+              className="w-full h-11 px-3.5 rounded-2xl border border-[#0D3B2A]/15 bg-[#FFF9EE]/50 text-sm font-semibold focus:outline-none focus:border-[#0D3B2A]"
+            />
+          </div>
+
+          <div className="grid grid-cols-3 gap-2">
+            <div>
+              <label className="block text-[11px] font-extrabold text-[#0D3B2A] mb-1">PIN Code</label>
+              <input
+                type="text"
+                inputMode="numeric"
+                maxLength={6}
+                value={waPinEdit}
+                onChange={(e) => setWaPinEdit(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                placeholder="PIN"
+                className="w-full h-10 px-3 rounded-xl border border-[#0D3B2A]/15 bg-[#FFF9EE]/50 text-xs font-extrabold tabular-nums"
+              />
+            </div>
+            <div>
+              <label className="block text-[11px] font-extrabold text-[#0D3B2A] mb-1">City</label>
+              <input
+                type="text"
+                value={waCityEdit}
+                onChange={(e) => setWaCityEdit(e.target.value)}
+                placeholder="City"
+                className="w-full h-10 px-3 rounded-xl border border-[#0D3B2A]/15 bg-[#FFF9EE]/50 text-xs font-bold"
+              />
+            </div>
+            <div>
+              <label className="block text-[11px] font-extrabold text-[#0D3B2A] mb-1">State</label>
+              <input
+                type="text"
+                value={waStateEdit}
+                onChange={(e) => setWaStateEdit(e.target.value)}
+                placeholder="State"
+                className="w-full h-10 px-3 rounded-xl border border-[#0D3B2A]/15 bg-[#FFF9EE]/50 text-xs font-bold"
+              />
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            className="w-full h-11 rounded-2xl bg-[#0D3B2A] text-[#B7E843] text-xs sm:text-sm font-extrabold hover:bg-[#175C41] cursor-pointer shadow-sm"
+          >
+            Save Profile Details
+          </button>
+        </form>
+      </div>
+    );
+  }
+
+  // Logged-Out Profile View → Simple WhatsApp Login
+  if (!user) {
+    const sendProfileOtp = async (e: React.FormEvent) => {
+      e.preventDefault();
+      setWaError('');
+      if (!/^[6-9]\d{9}$/.test(waPhoneInput)) {
+        setWaError('Enter a valid 10-digit WhatsApp number.');
+        return;
+      }
+      setWaBusy(true);
+      try {
+        const resp = await fetch('/api/whatsapp-otp/send', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phone: waPhoneInput }),
+        });
+        const data = await resp.json();
+        if (!resp.ok) {
+          setWaError(data.error || 'Could not send OTP.');
+          return;
+        }
+        setWaInstantCode(data.instantCode || null);
+        setWaStep('otp');
+        showToast('OTP sent to your WhatsApp!');
+      } catch {
+        setWaError('Could not connect. Try again.');
+      } finally {
+        setWaBusy(false);
+      }
+    };
+
+    const verifyProfileOtp = async (override?: string) => {
+      const code = (override ?? waOtpInput).trim();
+      if (code.length !== 6) {
+        setWaError('Enter 6-digit OTP.');
+        return;
+      }
+      setWaBusy(true);
+      setWaError('');
+      try {
+        const resp = await fetch('/api/whatsapp-otp/verify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phone: waPhoneInput, code }),
+        });
+        const data = await resp.json();
+        if (!resp.ok || !data.verified) {
+          setWaError(data.error || 'Invalid OTP.');
+          return;
+        }
+        setWhatsappSession({
+          phone: data.phone,
+          verified: true,
+          verificationToken: data.verificationToken,
+          verifiedAt: Date.now(),
+        });
+        showToast('Logged in to your Profile!');
+      } catch {
+        setWaError('Verification failed.');
+      } finally {
+        setWaBusy(false);
+      }
+    };
+
+    return (
+      <div className="bg-[#FFF9EE] py-6 sm:py-10 px-3.5">
+        <div className="max-w-md mx-auto bg-white rounded-[26px] border-2 border-[#0D3B2A]/10 p-5 sm:p-7 shadow-lg space-y-4">
+          <div className="text-center">
+            <div className="w-14 h-14 rounded-2xl bg-[#EBF9C8] text-[#0D3B2A] flex items-center justify-center mx-auto mb-3">
+              <User className="w-7 h-7" />
+            </div>
+            <h1 className="font-display text-2xl font-extrabold text-[#0D3B2A]">Your Profile</h1>
+            <p className="text-xs sm:text-sm text-[#4A5E54] mt-1">
+              Sign in with WhatsApp OTP to save your address and view your orders anytime.
+            </p>
+          </div>
+
+          {waStep === 'phone' ? (
+            <form onSubmit={sendProfileOtp} className="space-y-3">
+              <div className="flex items-center">
+                <span className="h-12 px-3.5 rounded-l-2xl border-2 border-r-0 border-[#0D3B2A]/12 bg-[#FFF9EE] text-sm font-extrabold text-[#0D3B2A] flex items-center">
+                  +91
+                </span>
+                <input
+                  type="tel"
+                  inputMode="numeric"
+                  maxLength={10}
+                  required
+                  value={waPhoneInput}
+                  onChange={(e) => setWaPhoneInput(e.target.value.replace(/\D/g, '').slice(0, 10))}
+                  placeholder="10-digit WhatsApp number"
+                  className="w-full h-12 px-4 rounded-r-2xl border-2 border-[#0D3B2A]/12 text-sm font-bold focus:outline-none focus:border-[#0D3B2A] tabular-nums"
+                />
+              </div>
+              {waError && <p className="text-xs font-bold text-[#C83B24]">{waError}</p>}
+              <button
+                type="submit"
+                disabled={waBusy || waPhoneInput.length !== 10}
+                className="w-full h-12 rounded-2xl bg-[#25D366] hover:bg-[#1ebe5d] text-white text-sm font-extrabold cursor-pointer disabled:opacity-50"
+              >
+                {waBusy ? 'Sending OTP...' : 'Continue with WhatsApp'}
+              </button>
+            </form>
+          ) : (
+            <div className="space-y-3">
+              {waInstantCode && (
+                <div className="rounded-2xl bg-[#EBF9C8]/75 p-3 flex items-center justify-between text-xs">
+                  <span>
+                    OTP: <strong className="font-mono text-base">{waInstantCode}</strong>
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setWaOtpInput(waInstantCode);
+                      verifyProfileOtp(waInstantCode);
+                    }}
+                    className="px-3 py-1.5 rounded-full bg-[#0D3B2A] text-[#B7E843] font-extrabold cursor-pointer"
+                  >
+                    Auto-Verify
+                  </button>
+                </div>
+              )}
+              <input
+                type="text"
+                inputMode="numeric"
+                maxLength={6}
+                value={waOtpInput}
+                onChange={(e) => setWaOtpInput(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                placeholder="Enter 6-digit OTP"
+                className="w-full h-12 px-4 rounded-2xl border-2 border-[#0D3B2A]/15 text-center font-mono text-lg font-extrabold tracking-[0.35em]"
+              />
+              {waError && <p className="text-xs font-bold text-[#C83B24]">{waError}</p>}
+              <button
+                type="button"
+                disabled={waBusy || waOtpInput.length !== 6}
+                onClick={() => verifyProfileOtp()}
+                className="w-full h-12 rounded-2xl bg-[#0D3B2A] text-[#B7E843] text-sm font-extrabold cursor-pointer disabled:opacity-50"
+              >
+                Verify OTP
+              </button>
+            </div>
+          )}
         </div>
       </div>
     );

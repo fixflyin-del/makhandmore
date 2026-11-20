@@ -4,8 +4,8 @@ import { AnimatePresence, motion } from 'motion/react';
 import {
   ArrowUp,
   ChevronDown,
-  Compass,
   Facebook,
+  Headphones,
   Heart,
   Home,
   Instagram,
@@ -13,11 +13,13 @@ import {
   MapPin,
   Menu,
   MessageCircle,
+  Package,
   Phone,
   Search,
   ShieldCheck,
   ShoppingBag,
   Sparkles,
+  Store,
   User,
   X,
 } from 'lucide-react';
@@ -136,15 +138,16 @@ export function Layout({ children }: { children: React.ReactNode }) {
     );
   }
 
-  const navTabActive = (key: 'home' | 'explore' | 'wishlist' | 'account') => {
+  const navTabActive = (key: 'home' | 'shop' | 'orders' | 'support' | 'profile') => {
     if (key === 'home') return location.pathname === '/';
-    if (key === 'explore')
+    if (key === 'shop')
       return location.pathname.startsWith('/shop') || location.pathname.startsWith('/category');
-    if (key === 'wishlist') return location.pathname === '/wishlist';
-    if (key === 'account')
+    if (key === 'orders')
+      return location.pathname === '/my-orders' || location.pathname === '/track-order';
+    if (key === 'support') return location.pathname === '/contact' || location.pathname === '/faq';
+    if (key === 'profile')
       return (
         location.pathname === '/account' ||
-        location.pathname === '/track-order' ||
         location.pathname === '/login' ||
         location.pathname === '/register'
       );
@@ -640,29 +643,18 @@ export function Layout({ children }: { children: React.ReactNode }) {
         </footer>
       </div>
 
-      {/* Native-Style Floating Mobile Bottom Navigation Dock (Hidden on PDP & Checkout where sticky CTA lives) */}
+      {/* Native-Style Floating Mobile Bottom Navigation Dock (Home, Shop, My Order, Support, Profile) */}
       {!isProductDetailRoute && !isCheckoutRoute && (
         <nav
-          className="lg:hidden fixed bottom-3 inset-x-3 z-40 rounded-[26px] bg-[#0D3B2A]/96 backdrop-blur-xl text-white h-[66px] px-2 grid grid-cols-5 items-center shadow-[0_14px_34px_rgba(13,59,42,0.38)] border border-white/12"
+          className="lg:hidden fixed bottom-2.5 inset-x-2.5 z-40 rounded-[24px] bg-[#0D3B2A]/96 backdrop-blur-xl text-white h-[64px] px-1.5 grid grid-cols-5 items-center shadow-[0_14px_34px_rgba(13,59,42,0.38)] border border-white/12"
           aria-label="Mobile bottom navigation"
         >
           {[
             { key: 'home' as const, to: '/', label: 'Home', icon: Home },
-            { key: 'explore' as const, to: '/shop', label: 'Explore', icon: Compass },
-            {
-              key: 'wishlist' as const,
-              to: '/wishlist',
-              label: 'Wishlist',
-              icon: Heart,
-              badge: wishlistIds.length,
-              badgeBg: 'bg-[#F25C54] text-white',
-            },
-            {
-              key: 'account' as const,
-              to: user ? '/account' : '/track-order',
-              label: user ? 'Account' : 'Orders',
-              icon: User,
-            },
+            { key: 'shop' as const, to: '/shop', label: 'Shop', icon: Store },
+            { key: 'orders' as const, to: '/my-orders', label: 'My Order', icon: Package },
+            { key: 'support' as const, to: '/contact', label: 'Support', icon: Headphones },
+            { key: 'profile' as const, to: '/account', label: 'Profile', icon: User },
           ].map((tab) => {
             const Icon = tab.icon;
             const active = navTabActive(tab.key);
@@ -680,48 +672,20 @@ export function Layout({ children }: { children: React.ReactNode }) {
                   />
                 )}
                 <Icon
-                  className={`w-5 h-5 relative z-10 transition-colors ${
+                  className={`w-[19px] h-[19px] relative z-10 transition-colors ${
                     active ? 'text-[#0D3B2A]' : 'text-white/75'
                   }`}
                 />
                 <span
-                  className={`text-[10px] font-bold relative z-10 mt-0.5 leading-none ${
+                  className={`text-[10px] font-bold relative z-10 mt-0.5 leading-none whitespace-nowrap ${
                     active ? 'text-[#0D3B2A]' : 'text-white/75'
                   }`}
                 >
                   {tab.label}
                 </span>
-                {tab.badge && tab.badge > 0 ? (
-                  <span
-                    className={`absolute top-0.5 right-2.5 z-20 min-w-[16px] h-4 px-1 rounded-full text-[9px] font-extrabold flex items-center justify-center tabular-nums ${tab.badgeBg}`}
-                  >
-                    {tab.badge}
-                  </span>
-                ) : null}
               </Link>
             );
           })}
-
-          <button
-            type="button"
-            onClick={() => setMiniCartOpen(true)}
-            className="relative flex flex-col items-center justify-center h-12 rounded-2xl text-white/85 cursor-pointer"
-          >
-            <div className="relative">
-              <ShoppingBag className="w-5 h-5 text-[#B7E843]" />
-              {cartCount > 0 && (
-                <motion.span
-                  key={cartCount}
-                  initial={{ scale: 0.7 }}
-                  animate={{ scale: 1 }}
-                  className="absolute -top-1.5 -right-2.5 min-w-[18px] h-[18px] px-1 rounded-full bg-[#F4B926] text-[#0D3B2A] text-[10px] font-extrabold flex items-center justify-center tabular-nums shadow-sm"
-                >
-                  {cartCount}
-                </motion.span>
-              )}
-            </div>
-            <span className="text-[10px] font-bold mt-0.5 leading-none text-[#B7E843]">Cart</span>
-          </button>
         </nav>
       )}
 

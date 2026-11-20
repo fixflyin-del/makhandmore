@@ -300,7 +300,128 @@ app.post('/api/payments/razorpay/webhook', (req, res) => {
   res.json({ received: true, event: req.body?.event || 'unknown' });
 });
 
-app.get('/api/pincode/:pin', (req, res) => {
+app.get('/api/location/reverse', async (req, res) => {
+  const lat = Number(req.query.lat);
+  const lon = Number(req.query.lon);
+  if (!Number.isFinite(lat) || !Number.isFinite(lon) || Math.abs(lat) > 90 || Math.abs(lon) > 180) {
+    res.status(400).json({ error: 'Invalid coordinates.' });
+    return;
+  }
+
+  try {
+    const nomResp = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${encodeURIComponent(
+        lat
+      )}&lon=${encodeURIComponent(lon)}&addressdetails=1&zoom=18`,
+      {
+        headers: {
+          'User-Agent': 'MakhAndMoreApp/1.0 (care@makhandmore.com)',
+          'Accept-Language': 'en-IN,en;q=0.9',
+        },
+      }
+    );
+
+    if (!nomResp.ok) {
+      res.status(502).json({ error: 'Reverse geocoding service unavailable.' });
+      return;
+    }
+
+    const nomData = (await nomResp.json()) as {
+      display_name?: string;
+      address?: Record<string, string>;
+    };
+    const addr = nomData.address || {};
+    const rawPin = String(addr.postcode || '').replace(/\D/g, '').slice(0, 6);
+    let city =
+      addr.city ||
+      addr.town ||
+      addr.village ||
+      addr.state_district ||
+      addr.county ||
+      '';
+    let state = addr.state || '';
+    let locality =
+      addr.suburb ||
+      addr.neighbourhood ||
+      addr.residential ||
+      addr.quarter ||
+      addr.hamlet ||
+      '';
+
+    if (/^[1-9]\d{5}$/.test(rawPin)) {
+      try {
+        const pinResp = await fetch(`https://api.postalpincode.in/pincode/${rawPin}`);
+        if (pinResp.ok) {
+          const pinJson = (await pinResp.json()) as Array<{
+            Status?: string;
+            PostOffice?: Array<{ Name?: string; District?: string; State?: string }>;
+          }>;
+          const po = pinJson?.[0]?.PostOffice?.[0];
+          if (pinJson?.[0]?.Status === 'Success' && po) {
+            if (po.District) city = po.District;
+            if (po.State) state = po.State;
+            if (!locality && po.Name) locality = po.Name;
+          }
+        }
+      } catch {
+        // fallback cleanly
+      }
+    }
+
+    const streetParts = [addr.house_number, addr.building, addr.road, locality].filter(
+      (part): part is string => Boolean(part && part.trim())
+    );
+    const uniqueStreetParts = Array.from(new Set(streetParts));
+    const addressLine =
+      uniqueStreetParts.join(', ') ||
+      (nomData.display_name ? nomData.display_name.split(',').slice(0, 2).join(', ').trim() : '');
+
+    res.json({
+      success: true,
+      pincode: /^[1-9]\d{5}$/.test(rawPin) ? rawPin : '',
+      city: city.trim(),
+      state: state.trim(),
+      locality: locality.trim(),
+      addressLine: addressLine.trim(),
+    });
+  } catch {
+    res.status(500).json({ error: 'Unable to resolve address from coordinates.' });
+  }
+});
+
+app.get('/api/location/ip', async (req, res) => {
+  try {
+    const forwarded = String(req.headers['x-forwarded-for'] || '').split(',')[0].trim();
+    const targetUrl =
+      forwarded && !forwarded.startsWith('127.') && !forwarded.startsWith('::1')
+        ? `https://ipwho.is/${encodeURIComponent(forwarded)}`
+        : 'https://ipwho.is/';
+    const ipResp = await fetch(targetUrl);
+    if (!ipResp.ok) {
+      res.status(502).json({ success: false });
+      return;
+    }
+    const data = (await ipResp.json()) as {
+      success?: boolean;
+      postal?: string;
+      city?: string;
+      region?: string;
+      country_code?: string;
+    };
+    const pin = String(data.postal || '').replace(/\D/g, '').slice(0, 6);
+    res.json({
+      success: Boolean(data.success),
+      pincode: /^[1-9]\d{5}$/.test(pin) ? pin : '',
+      city: data.city || '',
+      state: data.region || '',
+      countryCode: data.country_code || '',
+    });
+  } catch {
+    res.json({ success: false });
+  }
+});
+
+app.get('/api/pincode/:pin', async (req, res) => {
   const pin = String(req.params.pin || '').trim();
   if (!/^[1-9]\d{5}$/.test(pin)) {
     res.status(400).json({ serviceable: false, message: 'Please enter a valid 6-digit Indian PIN code.' });
@@ -325,10 +446,35 @@ app.get('/api/pincode/:pin', (req, res) => {
     8: 'Bihar & Jharkhand (Home Region)',
     9: 'Army Postal Service / Special Region',
   };
+
+  let city = '';
+  let state = '';
+  let locality = '';
+  try {
+    const pinResp = await fetch(`https://api.postalpincode.in/pincode/${pin}`);
+    if (pinResp.ok) {
+      const pinJson = (await pinResp.json()) as Array<{
+        Status?: string;
+        PostOffice?: Array<{ Name?: string; District?: string; State?: string }>;
+      }>;
+      const po = pinJson?.[0]?.PostOffice?.[0];
+      if (pinJson?.[0]?.Status === 'Success' && po) {
+        city = po.District || '';
+        state = po.State || '';
+        locality = po.Name || '';
+      }
+    }
+  } catch {
+    // fallback cleanly
+  }
+
   res.json({
     serviceable: true,
     pin,
-    region: regionMap[firstDigit] || 'Pan-India Delivery',
+    city,
+    state,
+    locality,
+    region: city && state ? `${city}, ${state}` : regionMap[firstDigit] || 'Pan-India Delivery',
     estimatedDays,
     codAvailable: true,
     freeShippingNote: 'Free shipping on orders above ₹299',

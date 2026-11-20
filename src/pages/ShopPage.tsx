@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { AnimatePresence, motion } from 'motion/react';
-import { ChevronRight, Search, SlidersHorizontal, Sparkles, X } from 'lucide-react';
+import { ChevronRight, SlidersHorizontal, Sparkles, X } from 'lucide-react';
 import {
   AnimatedDotCluster,
   AnimatedSparkle,
@@ -225,34 +225,32 @@ export function ShopPage() {
         })}
       </div>
 
-      {/* App-Style Search + Filter Button Bar */}
-      <div className="flex flex-col lg:flex-row gap-2.5 mb-3.5">
-        <div className="flex items-center gap-2 flex-1">
-          <div className="relative flex-1">
-            <Search className="w-4 h-4 text-[#23884D] absolute left-3.5 top-1/2 -translate-y-1/2" />
-            <input
-              type="text"
-              value={queryText}
-              onChange={(e) => setQueryText(e.target.value)}
-              placeholder="Search Pudina, Peri Peri, Cheese, Jumbo 200g..."
-              className="w-full h-10 sm:h-11 pl-10 pr-9 rounded-full bg-white border-2 border-[#0D3B2A]/10 text-xs sm:text-sm font-medium text-[#12261E] focus:outline-none focus:border-[#23884D] shadow-xs"
-            />
-            {queryText && (
-              <button
-                type="button"
-                onClick={() => setQueryText('')}
-                aria-label="Clear search"
-                className="w-6 h-6 rounded-full bg-[#FFF9EE] text-[#4A5E54] flex items-center justify-center absolute right-2.5 top-1/2 -translate-y-1/2 cursor-pointer"
-              >
-                <X className="w-3.5 h-3.5" />
-              </button>
-            )}
-          </div>
+      {/* Compact Filter & Sort Controls Bar (Search kept cleanly in Header only) */}
+      <div className="flex items-center justify-between gap-2 mb-3">
+        <span className="inline-flex items-center gap-1.5 text-xs font-bold text-[#4A5E54]">
+          <Sparkles className="w-3.5 h-3.5 text-[#F4B926]" />
+          Showing <strong className="text-[#0D3B2A] tabular-nums">{filteredProducts.length}</strong>{' '}
+          fresh {filteredProducts.length === 1 ? 'pack' : 'packs'}
+          {queryText ? (
+            <span className="text-[#23884D]">for “{queryText}”</span>
+          ) : null}
+        </span>
+
+        <div className="flex items-center gap-2">
+          {(queryText || selectedCategory !== 'all' || selectedFlavour !== 'all' || maxPrice < 1500) && (
+            <button
+              type="button"
+              onClick={resetFilters}
+              className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-[#FFE4E1] text-[#F25C54] text-xs font-extrabold hover:bg-[#F25C54] hover:text-white transition-colors cursor-pointer"
+            >
+              <X className="w-3.5 h-3.5" /> Reset
+            </button>
+          )}
 
           <button
             type="button"
             onClick={() => setFilterSheetOpen(true)}
-            className="lg:hidden h-10 px-3.5 rounded-full bg-[#0D3B2A] text-[#B7E843] text-xs font-extrabold inline-flex items-center gap-1.5 shrink-0 shadow-sm cursor-pointer"
+            className="lg:hidden h-9 px-3.5 rounded-full bg-[#0D3B2A] text-[#B7E843] text-xs font-extrabold inline-flex items-center gap-1.5 shrink-0 shadow-sm cursor-pointer"
           >
             <SlidersHorizontal className="w-3.5 h-3.5" />
             <span>Filter</span>
@@ -262,71 +260,52 @@ export function ShopPage() {
               </span>
             )}
           </button>
-        </div>
 
-        {/* Desktop Inline Controls */}
-        <div className="hidden lg:flex items-center gap-3 bg-white rounded-full px-4 py-1.5 border-2 border-[#0D3B2A]/10 shadow-xs">
-          <select
-            aria-label="Filter by flavour"
-            value={selectedFlavour}
-            onChange={(e) => setSelectedFlavour(e.target.value)}
-            className="h-9 px-3 rounded-full bg-[#EBF9C8]/70 text-xs font-extrabold text-[#0D3B2A] focus:outline-none cursor-pointer"
-          >
-            <option value="all">All Flavours</option>
-            {flavours.map((f) => (
-              <option key={f} value={f}>
-                {f}
-              </option>
-            ))}
-          </select>
+          {/* Desktop Inline Controls */}
+          <div className="hidden lg:flex items-center gap-3 bg-white rounded-full px-4 py-1.5 border-2 border-[#0D3B2A]/10 shadow-xs">
+            <select
+              aria-label="Filter by flavour"
+              value={selectedFlavour}
+              onChange={(e) => setSelectedFlavour(e.target.value)}
+              className="h-9 px-3 rounded-full bg-[#EBF9C8]/70 text-xs font-extrabold text-[#0D3B2A] focus:outline-none cursor-pointer"
+            >
+              <option value="all">All Flavours</option>
+              {flavours.map((f) => (
+                <option key={f} value={f}>
+                  {f}
+                </option>
+              ))}
+            </select>
 
-          <div className="flex items-center gap-2 px-2">
-            <span className="text-xs font-bold text-[#4A5E54] whitespace-nowrap">
-              Up to <strong className="text-[#0D3B2A] tabular-nums">₹{maxPrice}</strong>
-            </span>
-            <input
-              aria-label="Max price"
-              type="range"
-              min={200}
-              max={1500}
-              step={50}
-              value={maxPrice}
-              onChange={(e) => setMaxPrice(Number(e.target.value))}
-              className="w-28 accent-[#23884D]"
-            />
+            <div className="flex items-center gap-2 px-2">
+              <span className="text-xs font-bold text-[#4A5E54] whitespace-nowrap">
+                Up to <strong className="text-[#0D3B2A] tabular-nums">₹{maxPrice}</strong>
+              </span>
+              <input
+                aria-label="Max price"
+                type="range"
+                min={200}
+                max={1500}
+                step={50}
+                value={maxPrice}
+                onChange={(e) => setMaxPrice(Number(e.target.value))}
+                className="w-28 accent-[#23884D]"
+              />
+            </div>
+
+            <select
+              aria-label="Sort products"
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
+              className="h-9 px-3 rounded-full bg-[#FFF1B8] text-xs font-extrabold text-[#0D3B2A] focus:outline-none cursor-pointer"
+            >
+              <option value="featured">Featured First</option>
+              <option value="price-asc">Price: Low to High</option>
+              <option value="price-desc">Price: High to Low</option>
+              <option value="discount">Biggest Savings</option>
+            </select>
           </div>
-
-          <select
-            aria-label="Sort products"
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
-            className="h-9 px-3 rounded-full bg-[#FFF1B8] text-xs font-extrabold text-[#0D3B2A] focus:outline-none cursor-pointer"
-          >
-            <option value="featured">Featured First</option>
-            <option value="price-asc">Price: Low to High</option>
-            <option value="price-desc">Price: High to Low</option>
-            <option value="discount">Biggest Savings</option>
-          </select>
         </div>
-      </div>
-
-      {/* Results Count & Active Filter Pills */}
-      <div className="flex flex-wrap items-center justify-between gap-2 mb-3 text-xs">
-        <span className="inline-flex items-center gap-1.5 font-bold text-[#4A5E54]">
-          <Sparkles className="w-3.5 h-3.5 text-[#F4B926]" />
-          Showing <strong className="text-[#0D3B2A] tabular-nums">{filteredProducts.length}</strong>{' '}
-          fresh {filteredProducts.length === 1 ? 'pack' : 'packs'}
-        </span>
-
-        {(queryText || selectedCategory !== 'all' || selectedFlavour !== 'all' || maxPrice < 1500) && (
-          <button
-            type="button"
-            onClick={resetFilters}
-            className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[#FFE4E1] text-[#F25C54] font-extrabold hover:bg-[#F25C54] hover:text-white transition-colors cursor-pointer"
-          >
-            <X className="w-3.5 h-3.5" /> Reset All
-          </button>
-        )}
       </div>
 
       {/* Product Grid or Skeleton Loader */}

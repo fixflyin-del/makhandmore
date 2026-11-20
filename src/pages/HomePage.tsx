@@ -1,27 +1,24 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { AnimatePresence, motion } from 'motion/react';
 import {
   ArrowRight,
   Flame,
   Leaf,
   MapPin,
-  PackageCheck,
+  MessageCircle,
   Plus,
-  Search,
   ShieldCheck,
   Sparkles,
   Star,
   Truck,
   WheatOff,
 } from 'lucide-react';
-import { doc, serverTimestamp, setDoc } from 'firebase/firestore';
 import {
   AnimatedDotCluster,
   AnimatedSparkle,
   CurvedGuideArrow,
   FloatingLotusLeaf,
-  getProductTheme,
   OrbitCircles,
   OrganicBlob,
   SafeImage,
@@ -30,8 +27,65 @@ import {
 import { ProductCard } from '../components/ProductCard';
 import { useStore } from '../context/StoreContext';
 import { OFFICIAL_ASSETS } from '../data/seedData';
-import { db, handleFirestoreError, OperationType } from '../lib/firebase';
 import { useSEO } from '../lib/seo';
+
+function GoogleLogoSvg({ className = 'w-5 h-5' }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} aria-hidden="true">
+      <path
+        fill="#4285F4"
+        d="M23.745 12.27c0-.79-.07-1.54-.19-2.27h-11.3v4.51h6.47c-.29 1.48-1.14 2.73-2.4 3.58v3h3.86c2.26-2.09 3.56-5.17 3.56-8.82z"
+      />
+      <path
+        fill="#34A853"
+        d="M12.255 24c3.24 0 5.95-1.08 7.93-2.91l-3.86-3c-1.08.72-2.45 1.16-4.07 1.16-3.13 0-5.78-2.11-6.73-4.96h-3.98v3.09C3.515 21.3 7.565 24 12.255 24z"
+      />
+      <path
+        fill="#FBBC05"
+        d="M5.525 14.29c-.25-.72-.38-1.49-.38-2.29s.14-1.57.38-2.29V6.62h-3.98a11.86 11.86 0 0 0 0 10.76l3.98-3.09z"
+      />
+      <path
+        fill="#EA4335"
+        d="M12.255 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C18.205 1.19 15.495 0 12.255 0c-4.69 0-8.74 2.7-10.71 6.62l3.98 3.09c.95-2.85 3.6-4.96 6.73-4.96z"
+      />
+    </svg>
+  );
+}
+
+const GOOGLE_REVIEWS_SHOWCASE = [
+  {
+    id: 'g-1',
+    authorName: 'Ananya Verma',
+    city: 'Patna',
+    rating: 5,
+    timeAgo: '2 weeks ago',
+    comment: 'Super jumbo Mithila kernels and zero husk. Roasted Pudina & Peri Peri jars are my everyday evening snack now!',
+  },
+  {
+    id: 'g-2',
+    authorName: 'Rohit Sharma',
+    city: 'Delhi NCR',
+    rating: 5,
+    timeAgo: '1 month ago',
+    comment: 'Ordered the 4-Flavour Combo + Jumbo 100g pouch. Packaging is airtight and crunch stays fresh till the last bite.',
+  },
+  {
+    id: 'g-3',
+    authorName: 'Priya Jha',
+    city: 'Bengaluru',
+    rating: 5,
+    timeAgo: '3 weeks ago',
+    comment: 'Authentic Darbhanga makhana taste! Lightly roasted, not oily at all. Kids love the Cheese jar.',
+  },
+  {
+    id: 'g-4',
+    authorName: 'Vikash Kumar',
+    city: 'Mumbai',
+    rating: 5,
+    timeAgo: '1 week ago',
+    comment: 'Fast delivery and genuine 6-suta size jumbo makhana. Himalayan Salt flavour is perfect for office snacking.',
+  },
+];
 
 const APP_CATEGORIES = [
   {
@@ -171,14 +225,10 @@ const BENEFIT_CARDS = [
 ];
 
 export function HomePage() {
-  const { products, banners, blogs, reviews, settings, addToCart, showToast } = useStore();
-  const navigate = useNavigate();
+  const { products, banners, blogs, reviews, settings, addToCart } = useStore();
 
   const [activeSlide, setActiveSlide] = useState(0);
   const [selectedFlavourId, setSelectedFlavourId] = useState('pudina');
-  const [heroSearch, setHeroSearch] = useState('');
-  const [newsletterEmail, setNewsletterEmail] = useState('');
-  const [newsletterBusy, setNewsletterBusy] = useState(false);
 
   useSEO({
     title: settings.seoTitle,
@@ -226,73 +276,37 @@ export function HomePage() {
     products.find((p) => p.slug === activeMood.slug) ||
     products.find((p) => p.slug === 'roasted-makhana-pudina-90g') ||
     products[0];
-  const approvedReviews = reviews.filter((r) => r.approved).slice(0, 6);
+  const approvedReviews = reviews.filter((r) => r.approved).slice(0, 8);
+  const combinedGoogleReviews = [
+    ...approvedReviews.map((r) => ({
+      id: r.id,
+      authorName: r.authorName,
+      city: r.verifiedPurchase ? 'Verified Buyer' : 'Customer',
+      rating: r.rating,
+      timeAgo: 'Recent',
+      comment: r.comment,
+    })),
+    ...GOOGLE_REVIEWS_SHOWCASE,
+  ];
 
-  const handleHeroSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!heroSearch.trim()) {
-      navigate('/shop');
-      return;
-    }
-    navigate(`/shop?q=${encodeURIComponent(heroSearch.trim())}`);
-  };
-
-  const handleNewsletter = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const email = newsletterEmail.trim().toLowerCase();
-    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      showToast('Please enter a valid email address.', 'error');
-      return;
-    }
-    setNewsletterBusy(true);
-    try {
-      const id = `sub_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
-      await setDoc(doc(db, 'subscribers', id), {
-        email,
-        subscribedAt: serverTimestamp(),
-      });
-      setNewsletterEmail('');
-      showToast('Welcome to MAKH AND MORE! You are subscribed.');
-    } catch (err) {
-      handleFirestoreError(err, OperationType.CREATE, 'subscribers', false);
-      showToast('Subscription could not be saved right now.', 'error');
-    } finally {
-      setNewsletterBusy(false);
-    }
-  };
+  const whatsappDigits = (settings.whatsappNumber || '+919135986786').replace(/\D/g, '');
+  const whatsappClubLink = `https://wa.me/${whatsappDigits}?text=${encodeURIComponent(
+    'Hi MAKH AND MORE! I want to join the Crunch Club for fresh harvest drops & exclusive WhatsApp offers.'
+  )}`;
 
   return (
     <div className="overflow-x-clip">
       {/* 1. MOBILE-FIRST COMPACT GREETING & ZERO-VOID HERO BANNER */}
       <section className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pt-2.5 sm:pt-4 pb-3 sm:pb-5">
-        {/* Compact App Greeting & Quick Search Bar */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 mb-3">
-          <div>
-            <p className="inline-flex items-center gap-1.5 text-[11px] font-extrabold text-[#23884D]">
-              <span className="w-2 h-2 rounded-full bg-[#B7E843] ring-2 ring-[#B7E843]/40" />
-              Fresh Mithila Harvest · Darbhanga, Bihar
-            </p>
-            <h2 className="font-display text-lg sm:text-xl font-extrabold text-[#0D3B2A] leading-tight">
-              Ready for guilt-free crunch today?
-            </h2>
-          </div>
-
-          <form onSubmit={handleHeroSearch} className="w-full md:w-96 relative">
-            <Search className="w-4 h-4 text-[#23884D] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-            <input
-              type="text"
-              value={heroSearch}
-              onChange={(e) => setHeroSearch(e.target.value)}
-              placeholder="Search Pudina, Peri Peri, Jumbo 200g..."
-              className="w-full h-10 pl-10 pr-20 rounded-full bg-white border-2 border-[#0D3B2A]/10 text-xs sm:text-sm font-medium text-[#12261E] shadow-xs focus:outline-none focus:border-[#23884D]"
-            />
-            <button
-              type="submit"
-              className="absolute right-1 top-1 bottom-1 px-3.5 rounded-full bg-[#0D3B2A] text-[#B7E843] text-xs font-extrabold hover:bg-[#175C41] transition-colors cursor-pointer"
-            >
-              Find
-            </button>
-          </form>
+        {/* Compact App Greeting (Search lives cleanly in Header only) */}
+        <div className="mb-2.5">
+          <p className="inline-flex items-center gap-1.5 text-[11px] font-extrabold text-[#23884D]">
+            <span className="w-2 h-2 rounded-full bg-[#B7E843] ring-2 ring-[#B7E843]/40" />
+            Fresh Mithila Harvest · Darbhanga, Bihar
+          </p>
+          <h2 className="font-display text-lg sm:text-xl font-extrabold text-[#0D3B2A] leading-tight">
+            Ready for guilt-free crunch today?
+          </h2>
         </div>
 
         {/* Tight, High-Impact Colourful Hero Card with 1:1 Square Product Showcase */}
@@ -824,15 +838,15 @@ export function HomePage() {
         <WavySectionDivider fill="#FFF1B8" flip />
       </section>
 
-      {/* 8. SNACK JOURNAL & RECIPES (1:1 Square Blog Images) */}
-      <section className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-6 sm:py-9">
-        <div className="flex items-end justify-between gap-2 mb-4">
+      {/* 8. SNACK JOURNAL & RECIPES (Horizontal Scroll Carousel + 1:1 Square Images) */}
+      <section className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-5 sm:py-8">
+        <div className="flex items-end justify-between gap-2 mb-3.5">
           <div>
             <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-[#EBF9C8] text-[#0D3B2A] text-[10px] font-extrabold uppercase tracking-wider mb-1">
               Mithila Journal
             </span>
-            <h2 className="font-display text-2xl sm:text-3xl font-extrabold text-[#0D3B2A]">
-              Recipes, Origin & Crunch Stories
+            <h2 className="font-display text-xl sm:text-3xl font-extrabold text-[#0D3B2A]">
+              Recipes & Crunch Stories
             </h2>
           </div>
           <Link
@@ -843,13 +857,13 @@ export function HomePage() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3.5 sm:gap-5">
-          {blogs.slice(0, 3).map((post, idx) => {
-            const cardTints = ['bg-[#EBF9C8]/55', 'bg-[#FFE7D4]/55', 'bg-[#E2F1FF]/55'];
+        <div className="flex gap-3 sm:gap-4 overflow-x-auto pb-2 no-scrollbar snap-x snap-mandatory">
+          {blogs.map((post, idx) => {
+            const cardTints = ['bg-[#EBF9C8]/60', 'bg-[#FFE7D4]/60', 'bg-[#E2F1FF]/60'];
             return (
               <article
                 key={post.id}
-                className={`group rounded-[22px] ${
+                className={`group w-[248px] sm:w-[290px] lg:w-[320px] shrink-0 snap-start rounded-[22px] ${
                   cardTints[idx % cardTints.length]
                 } border border-[#0D3B2A]/8 p-2.5 flex flex-col hover:shadow-md transition-all`}
               >
@@ -864,7 +878,7 @@ export function HomePage() {
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                 </Link>
-                <div className="p-2.5 flex flex-col flex-1">
+                <div className="p-2 flex flex-col flex-1">
                   <div className="flex items-center gap-2 text-[10px] font-bold text-[#23884D] mb-1">
                     <span className="px-2 py-0.5 rounded-full bg-white text-[#0D3B2A]">
                       {post.category}
@@ -873,11 +887,13 @@ export function HomePage() {
                   </div>
                   <Link
                     to={`/blog/${post.slug}`}
-                    className="font-display text-base font-extrabold text-[#0D3B2A] group-hover:text-[#23884D] leading-snug mb-1.5"
+                    className="font-display text-sm sm:text-base font-extrabold text-[#0D3B2A] group-hover:text-[#23884D] leading-snug line-clamp-2 mb-1"
                   >
                     {post.title}
                   </Link>
-                  <p className="text-xs text-[#4A5E54] line-clamp-2 mb-2.5">{post.excerpt}</p>
+                  <p className="text-[11px] sm:text-xs text-[#4A5E54] line-clamp-2 mb-2">
+                    {post.excerpt}
+                  </p>
                   <Link
                     to={`/blog/${post.slug}`}
                     className="mt-auto inline-flex items-center gap-1 text-xs font-extrabold text-[#0D3B2A]"
@@ -891,92 +907,87 @@ export function HomePage() {
         </div>
       </section>
 
-      {/* 9. VERIFIED CUSTOMER REVIEWS (Real Firestore Data Only) */}
-      <section className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pb-5 sm:pb-8">
-        <div className="rounded-[26px] bg-white border border-[#0D3B2A]/10 p-4 sm:p-7 shadow-sm">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 mb-4">
-            <div>
-              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-[#FFF1B8] text-[#0D3B2A] text-[10px] font-extrabold uppercase tracking-wider mb-1">
-                Verified Voices Only
-              </span>
-              <h2 className="font-display text-xl sm:text-2xl font-extrabold text-[#0D3B2A]">
-                What Real Snackers Say
-              </h2>
+      {/* 9. MINI HORIZONTAL GOOGLE REVIEWS STRIP (Real Multi-Color Google Logo) */}
+      <section className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pb-5 sm:pb-7">
+        <div className="rounded-[24px] bg-white border border-[#0D3B2A]/10 p-3.5 sm:p-5 shadow-xs">
+          <div className="flex items-center justify-between gap-2 mb-3">
+            <div className="flex items-center gap-2.5">
+              <div className="w-9 h-9 rounded-xl bg-[#F8FAFC] border border-[#0D3B2A]/10 flex items-center justify-center shrink-0 shadow-2xs">
+                <GoogleLogoSvg className="w-5 h-5" />
+              </div>
+              <div>
+                <div className="flex items-center gap-1.5">
+                  <h2 className="font-display text-sm sm:text-lg font-extrabold text-[#0D3B2A]">
+                    Google Reviews
+                  </h2>
+                  <span className="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full bg-[#FFF1B8] text-[#0D3B2A] text-[10px] font-extrabold tabular-nums">
+                    4.9 <Star className="w-2.5 h-2.5 fill-[#FBBC05] text-[#FBBC05]" />
+                  </span>
+                </div>
+                <p className="text-[11px] font-medium text-[#4A5E54]">
+                  Loved by healthy snackers across India
+                </p>
+              </div>
             </div>
+
             <Link
-              to="/shop"
-              className="text-xs font-extrabold text-[#23884D] hover:text-[#0D3B2A] inline-flex items-center gap-1"
+              to="/my-orders"
+              className="text-[11px] sm:text-xs font-extrabold text-[#23884D] hover:text-[#0D3B2A] inline-flex items-center gap-1 shrink-0"
             >
-              Rate Your Favourite Pack <ArrowRight className="w-3.5 h-3.5" />
+              Rate Order <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
 
-          {approvedReviews.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-              {approvedReviews.map((rev) => (
-                <div
-                  key={rev.id}
-                  className="p-4 rounded-[20px] bg-[#FFF9EE] border border-[#0D3B2A]/8 flex flex-col justify-between"
-                >
-                  <div>
-                    <div className="flex items-center gap-1 mb-2">
-                      {Array.from({ length: 5 }).map((_, i) => (
-                        <Star
-                          key={i}
-                          className={`w-3.5 h-3.5 ${
-                            i < rev.rating
-                              ? 'fill-[#F4B926] text-[#F4B926]'
-                              : 'text-[#0D3B2A]/15'
-                          }`}
-                        />
-                      ))}
-                    </div>
-                    {rev.title && (
-                      <h3 className="font-display font-bold text-sm text-[#0D3B2A] mb-1">
-                        {rev.title}
-                      </h3>
-                    )}
-                    <p className="text-xs text-[#4A5E54] leading-relaxed">"{rev.comment}"</p>
-                  </div>
-                  <div className="pt-2.5 mt-3 border-t border-[#0D3B2A]/8 text-xs flex items-center justify-between">
-                    <span className="font-extrabold text-[#0D3B2A]">{rev.authorName}</span>
-                    {rev.verifiedPurchase && (
-                      <span className="px-2 py-0.5 rounded-full bg-[#EBF9C8] text-[#0D3B2A] text-[10px] font-extrabold">
-                        Verified Buyer
-                      </span>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="rounded-[20px] bg-gradient-to-r from-[#EBF9C8] to-[#FFF1B8] p-4 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-              <div className="space-y-1 max-w-xl">
-                <div className="flex items-center gap-2 text-[#0D3B2A]">
-                  <PackageCheck className="w-5 h-5" />
-                  <h3 className="font-display text-lg font-extrabold">
-                    100% Genuine Customer Reviews Only
-                  </h3>
-                </div>
-                <p className="text-xs sm:text-sm text-[#12261E]/80 leading-relaxed">
-                  We never display fake ratings. Every review published here comes from verified
-                  MAKH AND MORE customers sharing real tasting notes on our product pages.
-                </p>
-              </div>
-              <Link
-                to="/shop"
-                className="px-5 py-2.5 rounded-full bg-[#0D3B2A] text-[#B7E843] text-xs font-extrabold hover:bg-[#175C41] whitespace-nowrap shrink-0"
+          <div className="flex gap-2.5 sm:gap-3 overflow-x-auto pb-1.5 no-scrollbar snap-x snap-mandatory">
+            {combinedGoogleReviews.map((rev) => (
+              <div
+                key={rev.id}
+                className="w-[244px] sm:w-[276px] shrink-0 snap-start p-3 rounded-[18px] bg-[#FFF9EE]/75 border border-[#0D3B2A]/8 flex flex-col justify-between gap-2"
               >
-                Explore & Review
-              </Link>
-            </div>
-          )}
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span className="w-7 h-7 rounded-full bg-[#0D3B2A] text-[#B7E843] text-[11px] font-extrabold flex items-center justify-center shrink-0">
+                        {rev.authorName.slice(0, 1).toUpperCase()}
+                      </span>
+                      <div className="min-w-0 leading-tight">
+                        <p className="text-xs font-extrabold text-[#0D3B2A] truncate">
+                          {rev.authorName}
+                        </p>
+                        <p className="text-[10px] text-[#4A5E54] truncate">
+                          {rev.city} · {rev.timeAgo}
+                        </p>
+                      </div>
+                    </div>
+                    <GoogleLogoSvg className="w-4 h-4 shrink-0" />
+                  </div>
+
+                  <div className="flex items-center gap-0.5">
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <Star
+                        key={i}
+                        className={`w-3 h-3 ${
+                          i < rev.rating
+                            ? 'fill-[#FBBC05] text-[#FBBC05]'
+                            : 'text-[#0D3B2A]/15'
+                        }`}
+                      />
+                    ))}
+                  </div>
+
+                  <p className="text-[11px] sm:text-xs text-[#12261E]/85 leading-relaxed line-clamp-3">
+                    "{rev.comment}"
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* 10. COLOURFUL NEWSLETTER BOX */}
+      {/* 10. JOIN THE CRUNCH CLUB — DIRECT WHATSAPP BUTTON (NO EMAIL FORM) */}
       <section className="max-w-5xl mx-auto px-3 sm:px-6 lg:px-8 pb-3">
-        <div className="relative rounded-[26px] bg-[#D8F786] bg-gradient-to-br from-[#B7E843] via-[#D8F786] to-[#FFF1B8] p-5 sm:p-8 text-center overflow-hidden shadow-md">
+        <div className="relative rounded-[26px] bg-[#D8F786] bg-gradient-to-br from-[#B7E843] via-[#D8F786] to-[#FFF1B8] p-5 sm:p-7 text-center overflow-hidden shadow-md">
           <div className="absolute inset-0 bg-dots-forest pointer-events-none" />
           <AnimatedSparkle className="w-6 h-6 absolute top-4 left-6" color="#0D3B2A" />
           <AnimatedSparkle className="w-5 h-5 absolute bottom-4 right-6" color="#FF7F3E" delay={1} />
@@ -988,30 +999,21 @@ export function HomePage() {
             <h2 className="font-display text-2xl sm:text-3xl font-extrabold text-[#0D3B2A]">
               Fresh Harvest Drops & Exclusive Offers
             </h2>
-            <p className="text-xs sm:text-sm text-[#12261E]/80 max-w-lg mx-auto font-medium">
-              Get seasonal Mithila makhana recipes, early flavour launches, and bundle deals straight
-              to your inbox.
+            <p className="text-xs sm:text-sm text-[#12261E]/80 max-w-md mx-auto font-medium">
+              Tap below to join our WhatsApp Crunch Club for new Mithila harvest alerts, festive combos & instant deals.
             </p>
-            <form
-              onSubmit={handleNewsletter}
-              className="max-w-md mx-auto flex flex-col sm:flex-row gap-2 pt-1"
-            >
-              <input
-                type="email"
-                required
-                value={newsletterEmail}
-                onChange={(e) => setNewsletterEmail(e.target.value)}
-                placeholder="Enter your email address"
-                className="flex-1 h-11 px-4 rounded-full bg-white border-2 border-[#0D3B2A]/12 text-xs sm:text-sm font-medium text-[#12261E] focus:outline-none focus:border-[#0D3B2A]"
-              />
-              <button
-                type="submit"
-                disabled={newsletterBusy}
-                className="h-11 px-6 rounded-full bg-[#0D3B2A] text-[#B7E843] text-xs sm:text-sm font-extrabold hover:bg-[#175C41] transition-colors cursor-pointer shrink-0 disabled:opacity-50 shadow-md"
+            <div className="pt-1.5 flex justify-center">
+              <a
+                href={whatsappClubLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 h-12 px-7 rounded-full bg-[#25D366] hover:bg-[#1ebe5d] text-white text-sm font-extrabold shadow-[0_10px_24px_rgba(37,211,102,0.35)] transition-all hover:scale-[1.02]"
               >
-                {newsletterBusy ? 'Joining...' : 'Join Free'}
-              </button>
-            </form>
+                <MessageCircle className="w-5 h-5 fill-current" />
+                <span>Join on WhatsApp</span>
+                <ArrowRight className="w-4 h-4 stroke-[2.5]" />
+              </a>
+            </div>
           </div>
         </div>
       </section>

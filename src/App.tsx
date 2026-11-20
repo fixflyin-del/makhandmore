@@ -12,6 +12,7 @@ import { CheckoutPage } from './pages/CheckoutPage';
 import { ContactPage } from './pages/ContactPage';
 import { HomePage } from './pages/HomePage';
 import { FaqPage, PolicyPage } from './pages/LegalAndFaqPages';
+import { MyOrdersPage } from './pages/MyOrdersPage';
 import { OrderConfirmationPage } from './pages/OrderConfirmationPage';
 import { ProductDetailPage } from './pages/ProductDetailPage';
 import { ShopPage } from './pages/ShopPage';
@@ -74,6 +75,7 @@ function StorefrontRoutes() {
         <Route path="/blog" element={<BlogListPage />} />
         <Route path="/blog/:slug" element={<BlogDetailPage />} />
         <Route path="/account" element={<AccountPage />} />
+        <Route path="/my-orders" element={<MyOrdersPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/cart" element={<CartPage />} />

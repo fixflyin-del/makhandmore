@@ -20,7 +20,7 @@ import {
   handleFirestoreError,
   OperationType,
 } from '../lib/firebase';
-import { SavedAddress, UserProfile, WhatsAppSession } from '../types';
+import { Order, SavedAddress, UserProfile, WhatsAppProfile, WhatsAppSession } from '../types';
 
 interface AuthContextValue {
   user: User | null;
@@ -28,7 +28,12 @@ interface AuthContextValue {
   loading: boolean;
   isAdmin: boolean;
   whatsappSession: WhatsAppSession | null;
+  whatsappProfile: WhatsAppProfile | null;
+  whatsappOrders: Order[];
+  isCustomerLoggedIn: boolean;
   setWhatsappSession: (session: WhatsAppSession | null) => void;
+  saveWhatsappProfile: (updates: Partial<WhatsAppProfile> & { phone: string }) => void;
+  recordWhatsappOrder: (order: Order) => void;
   signInWithGoogle: () => Promise<User>;
   loginWithEmail: (email: string, password: string) => Promise<User>;
   registerWithEmail: (name: string, email: string, password: string, phone?: string) => Promise<User>;
@@ -42,6 +47,31 @@ interface AuthContextValue {
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 const WA_STORAGE_KEY = 'makh_whatsapp_checkout_session';
+const WA_PROFILES_KEY = 'makh_whatsapp_profiles_v1';
+const WA_ORDERS_KEY = 'makh_whatsapp_orders_v1';
+
+function normalizePhoneDigits(phone?: string | null): string {
+  const digits = String(phone || '').replace(/\D/g, '');
+  return digits.length >= 10 ? digits.slice(-10) : digits;
+}
+
+function readAllWhatsappProfiles(): Record<string, WhatsAppProfile> {
+  try {
+    const raw = localStorage.getItem(WA_PROFILES_KEY);
+    return raw ? (JSON.parse(raw) as Record<string, WhatsAppProfile>) : {};
+  } catch {
+    return {};
+  }
+}
+
+function readAllWhatsappOrders(): Record<string, Order[]> {
+  try {
+    const raw = localStorage.getItem(WA_ORDERS_KEY);
+    return raw ? (JSON.parse(raw) as Record<string, Order[]>) : {};
+  } catch {
+    return {};
+  }
+}
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
@@ -53,7 +83,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const raw = localStorage.getItem(WA_STORAGE_KEY);
       if (!raw) return null;
       const parsed = JSON.parse(raw) as WhatsAppSession;
-      if (parsed?.verified && Date.now() - parsed.verifiedAt < 24 * 60 * 60 * 1000) {
+      if (parsed?.verified && parsed.phone) {
         return parsed;
       }
       return null;
@@ -61,6 +91,47 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return null;
     }
   });
+
+  const [whatsappProfile, setWhatsappProfile] = useState<WhatsAppProfile | null>(() => {
+    try {
+      const raw = localStorage.getItem(WA_STORAGE_KEY);
+      if (!raw) return null;
+      const session = JSON.parse(raw) as WhatsAppSession;
+      const key = normalizePhoneDigits(session?.phone);
+      if (!key) return null;
+      const profiles = readAllWhatsappProfiles();
+      return profiles[key] || null;
+    } catch {
+      return null;
+    }
+  });
+
+  const [whatsappOrders, setWhatsappOrders] = useState<Order[]>(() => {
+    try {
+      const raw = localStorage.getItem(WA_STORAGE_KEY);
+      if (!raw) return [];
+      const session = JSON.parse(raw) as WhatsAppSession;
+      const key = normalizePhoneDigits(session?.phone);
+      if (!key) return [];
+      const ordersMap = readAllWhatsappOrders();
+      return ordersMap[key] || [];
+    } catch {
+      return [];
+    }
+  });
+
+  const syncWhatsappDataForPhone = (phone?: string | null) => {
+    const key = normalizePhoneDigits(phone);
+    if (!key) {
+      setWhatsappProfile(null);
+      setWhatsappOrders([]);
+      return;
+    }
+    const profiles = readAllWhatsappProfiles();
+    setWhatsappProfile(profiles[key] || null);
+    const ordersMap = readAllWhatsappOrders();
+    setWhatsappOrders(ordersMap[key] || []);
+  };
 
   const setWhatsappSession = (session: WhatsAppSession | null) => {
     setWhatsappSessionState(session);
@@ -72,6 +143,47 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     } catch {
       // ignore storage errors
+    }
+    syncWhatsappDataForPhone(session?.phone);
+  };
+
+  const saveWhatsappProfile = (updates: Partial<WhatsAppProfile> & { phone: string }) => {
+    const key = normalizePhoneDigits(updates.phone);
+    if (!key) return;
+    const all = readAllWhatsappProfiles();
+    const existing = all[key];
+    const next: WhatsAppProfile = {
+      phone: updates.phone.startsWith('+91') ? updates.phone : `+91${key}`,
+      fullName: (updates.fullName ?? existing?.fullName ?? '').trim(),
+      addressLine: (updates.addressLine ?? existing?.addressLine ?? '').trim(),
+      city: (updates.city ?? existing?.city ?? '').trim(),
+      state: (updates.state ?? existing?.state ?? '').trim(),
+      pincode: (updates.pincode ?? existing?.pincode ?? '').trim(),
+      updatedAt: new Date().toISOString(),
+    };
+    all[key] = next;
+    try {
+      localStorage.setItem(WA_PROFILES_KEY, JSON.stringify(all));
+    } catch {
+      // ignore
+    }
+    setWhatsappProfile(next);
+  };
+
+  const recordWhatsappOrder = (order: Order) => {
+    const key = normalizePhoneDigits(order.customerPhone || whatsappSession?.phone);
+    if (!key) return;
+    const all = readAllWhatsappOrders();
+    const prev = all[key] || [];
+    const deduped = [order, ...prev.filter((o) => o.orderNumber !== order.orderNumber)].slice(0, 50);
+    all[key] = deduped;
+    try {
+      localStorage.setItem(WA_ORDERS_KEY, JSON.stringify(all));
+    } catch {
+      // ignore
+    }
+    if (normalizePhoneDigits(whatsappSession?.phone) === key || !whatsappSession?.phone) {
+      setWhatsappOrders(deduped);
     }
   };
 
@@ -240,6 +352,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     await updateUserProfile({ addresses: updated });
   };
 
+  const isCustomerLoggedIn = Boolean(whatsappSession?.verified || user);
+
   return (
     <AuthContext.Provider
       value={{
@@ -248,7 +362,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         loading,
         isAdmin,
         whatsappSession,
+        whatsappProfile,
+        whatsappOrders,
+        isCustomerLoggedIn,
         setWhatsappSession,
+        saveWhatsappProfile,
+        recordWhatsappOrder,
         signInWithGoogle,
         loginWithEmail,
         registerWithEmail,

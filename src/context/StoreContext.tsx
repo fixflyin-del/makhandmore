@@ -47,6 +47,16 @@ interface StoreContextValue {
   firestoreSeeded: boolean;
   refreshStore: () => Promise<void>;
   seedFirestoreDatabase: () => Promise<void>;
+  submitCustomerReview: (review: {
+    productId: string;
+    productName?: string;
+    userId: string;
+    authorName: string;
+    rating: number;
+    title?: string;
+    comment: string;
+    verifiedPurchase?: boolean;
+  }) => Promise<Review>;
 
   // Cart
   cart: CartItem[];
@@ -89,6 +99,16 @@ const StoreContext = createContext<StoreContextValue | null>(null);
 const CART_KEY = 'makh_cart_v1';
 const WISHLIST_KEY = 'makh_wishlist_v1';
 const RECENT_KEY = 'makh_recent_v1';
+const LOCAL_REVIEWS_KEY = 'makh_customer_reviews_v1';
+
+function readLocalReviews(): Review[] {
+  try {
+    const raw = localStorage.getItem(LOCAL_REVIEWS_KEY);
+    return raw ? (JSON.parse(raw) as Review[]) : [];
+  } catch {
+    return [];
+  }
+}
 
 export function StoreProvider({ children }: { children: React.ReactNode }) {
   const [products, setProducts] = useState<Product[]>(INITIAL_PRODUCTS);
@@ -96,7 +116,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   const [blogs, setBlogs] = useState<BlogArticle[]>(INITIAL_BLOGS);
   const [banners, setBanners] = useState<HeroBanner[]>(INITIAL_BANNERS);
   const [coupons, setCoupons] = useState<Coupon[]>(INITIAL_COUPONS);
-  const [reviews, setReviews] = useState<Review[]>([]);
+  const [reviews, setReviews] = useState<Review[]>(() => readLocalReviews());
   const [settings, setSettings] = useState<StoreSettings>(INITIAL_SETTINGS);
   const [loadingStore, setLoadingStore] = useState(true);
   const [firestoreSeeded, setFirestoreSeeded] = useState(false);
@@ -223,7 +243,10 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       }
 
       if (reviewSnap.status === 'fulfilled') {
-        setReviews(reviewSnap.value.docs.map((d) => ({ ...(d.data() as Review), id: d.id })));
+        const remoteReviews = reviewSnap.value.docs.map((d) => ({ ...(d.data() as Review), id: d.id }));
+        const localReviews = readLocalReviews();
+        const remoteIds = new Set(remoteReviews.map((r) => r.id));
+        setReviews([...localReviews.filter((r) => !remoteIds.has(r.id)), ...remoteReviews]);
       }
 
       if (settingsSnap.status === 'fulfilled' && settingsSnap.value.exists()) {
@@ -457,6 +480,67 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     setRecentlyViewedIds((prev) => [productId, ...prev.filter((id) => id !== productId)].slice(0, 12));
   }, []);
 
+  const submitCustomerReview = useCallback(
+    async (input: {
+      productId: string;
+      productName?: string;
+      userId: string;
+      authorName: string;
+      rating: number;
+      title?: string;
+      comment: string;
+      verifiedPurchase?: boolean;
+    }): Promise<Review> => {
+      const id = `rev_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
+      const nowIso = new Date().toISOString();
+      const review: Review = {
+        id,
+        productId: input.productId,
+        productName: input.productName,
+        userId: input.userId,
+        authorName: input.authorName.trim().slice(0, 80),
+        rating: Math.max(1, Math.min(5, Math.round(input.rating))),
+        title: input.title?.trim().slice(0, 120),
+        comment: input.comment.trim().slice(0, 1200),
+        verifiedPurchase: Boolean(input.verifiedPurchase),
+        approved: true,
+        createdAt: nowIso,
+        updatedAt: nowIso,
+      };
+
+      const existingLocal = readLocalReviews();
+      const updatedLocal = [review, ...existingLocal].slice(0, 50);
+      try {
+        localStorage.setItem(LOCAL_REVIEWS_KEY, JSON.stringify(updatedLocal));
+      } catch {
+        // ignore storage quota
+      }
+      setReviews((prev) => [review, ...prev.filter((r) => r.id !== id)]);
+
+      // Also attempt Firestore sync silently (succeeds for Firebase-authenticated users)
+      try {
+        await setDoc(doc(db, 'reviews', id), {
+          productId: review.productId,
+          productName: review.productName || '',
+          userId: review.userId,
+          authorName: review.authorName,
+          rating: review.rating,
+          title: review.title || '',
+          comment: review.comment,
+          verifiedPurchase: Boolean(review.verifiedPurchase),
+          approved: false,
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp(),
+        });
+      } catch {
+        // local review already persisted for WhatsApp users
+      }
+
+      return review;
+    },
+    []
+  );
+
   return (
     <StoreContext.Provider
       value={{
@@ -471,6 +555,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         firestoreSeeded,
         refreshStore,
         seedFirestoreDatabase,
+        submitCustomerReview,
         cart,
         cartCount,
         cartSubtotal,
